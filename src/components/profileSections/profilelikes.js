@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Tweets from '../tweets';
 
-const ProfileLikes = ({user, setCurrentPage}) => {
+
+const ProfileLikes = ({user, setCurrentPage, changeTweetPopState}) => {
 
     const [pageLoaded, setPageLoaded] = useState(false)
     const [tweets, setTweets] = useState([{}])

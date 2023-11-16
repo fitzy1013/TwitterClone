@@ -5,11 +5,7 @@ import SideBarItemComponent from "./sidebar/sideBarItemComponent";
 import { useSignOut } from 'react-auth-kit'
 import { useNavigate } from "react-router";
 
-<<<<<<< HEAD
-const LeftSidebar = ({setCurrentPage, username, changeTweetPopState}) => {
-=======
 const LeftSidebar = ({setCurrentPage, username}) => {
->>>>>>> 425f016a9c4d16b4f1c8160c55f3e35c97edb32c
 
   const signOut = useSignOut();
   const navigate = useNavigate();
@@ -24,12 +20,6 @@ const LeftSidebar = ({setCurrentPage, username}) => {
         <SideBarItemComponent name={"Messages"} setCurrentPage={setCurrentPage}/>
         <SideBarItemComponent name={"Bookmarks"} setCurrentPage={setCurrentPage}/>
         <SideBarItemComponent name={"Profile"} setCurrentPage={setCurrentPage} username={username}/>
-<<<<<<< HEAD
-        <Box>
-          <Button variant="contained" sx={{borderRadius: 5, width: '100%'}} onClick={() => changeTweetPopState()}> Tweet </Button>
-        </Box>
-=======
->>>>>>> 425f016a9c4d16b4f1c8160c55f3e35c97edb32c
         <Box marginTop={10} paddingTop={20}>
           <Button variant="contained" fullWidth sx={{borderRadius: 5}} onClick={() => {
             signOut();

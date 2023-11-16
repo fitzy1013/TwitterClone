@@ -10,6 +10,7 @@ import {
 import React, { useState, useEffect } from "react";
 import Tweets from "../tweets";
 import axios from "axios";
+import TweetSubmission from "../tweetSubmission";
 
 const Home = ({ username, setCurrentPage }) => {
   const [tweetContent, setTweetContent] = useState("");
