@@ -1,0 +1,41 @@
+import { Box } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import Tweets from '../tweets';
+import axios from 'axios';
+
+const ProfileTweets = ({user, setCurrentPage, changeTweetPopState}) => {
+
+    const [pageLoaded, setPageLoaded] = useState(false)
+    const [tweets, setTweets] = useState([])
+    const [retweets, setRetweets] = useState([])
+
+    console.log(tweets)
+    console.log(retweets)
+
+    useEffect(() => {
+        setPageLoaded(false)
+        axios.get(`http://localhost:3002/api/tweets/user/${user.username}`)
+            .then(response => {
+                setTweets(response.data)
+            })
+            .catch(error => {
+                console.error('Error:', error);
+              }); 
+        axios.get(`http://localhost:3002/api/retweets/user/${user.username}`)
+              .then(response => {
+                setRetweets(response.data)
+                setPageLoaded(true)
+              })
+              .catch(error => {
+                console.error('Error:', error);
+              })
+    },[])
+
+    return (
+        <Box>
+            {pageLoaded && <Tweets tweets={tweets} setCurrentPage={setCurrentPage} retweets={retweets} changeTweetPopState={changeTweetPopState}/>}
+        </Box>
+    )
+}
+
+export default ProfileTweets
