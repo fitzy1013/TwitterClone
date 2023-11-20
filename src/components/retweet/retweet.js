@@ -5,12 +5,12 @@ import Tweet from "../tweet/tweet";
 import axios from "axios";
 import useFetchUserInfo from "../../useFetch";
 
-const Retweet = ({ retweet, changeTweetPopState }) => {
+const Retweet = ({ retweet }) => {
   const [hasQuote, setHasQuote] = useState(false);
   const retweetUser = useFetchUserInfo(retweet.username);
 
-  console.log(retweetUser)
-
+  console.log(retweet)
+  
   useEffect(() => {
     if (!retweet.quote || retweet.quote == "") {
       setHasQuote(false);
@@ -65,7 +65,7 @@ const Retweet = ({ retweet, changeTweetPopState }) => {
       <Tweet
         tweet={retweet.tweet}
         isEmbed={hasQuote ? true : false}
-        changeTweetPopState={changeTweetPopState}
+        // changeTweetPopState={changeTweetPopState}
       />
       </Box>}
     </Box>

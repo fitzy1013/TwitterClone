@@ -73,7 +73,6 @@ const Home = ({ username, setCurrentPage }) => {
           <strong>Home</strong>
         </Typography>
       </Box>
-      <TweetSubmission/>
       <Box
         marginTop={2}
         paddingBottom={2}

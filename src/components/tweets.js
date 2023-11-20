@@ -2,15 +2,20 @@ import { Avatar, Box, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import Tweet from "./tweet/tweet";
 import axios from "axios";
+import Retweet from "./retweet/retweet";
 
-const Tweets = ({tweets, setCurrentPage}) => {
+const Tweets = ({tweets, setCurrentPage, retweets}) => {
   
   console.log(tweets)
+  console.log(retweets)
 
   return (
     <Box>
-      {tweets.map((item, index) => (
+      {tweets && tweets.map((item, index) => (
         <Tweet key={index} tweet={item} setCurrentPage={setCurrentPage}/>
+      ))}
+      {retweets && retweets.map((item, index) => (
+        <Retweet key={index} retweet={item}/>
       ))}
     </Box>
   );
