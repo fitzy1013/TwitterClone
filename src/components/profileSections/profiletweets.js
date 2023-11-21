@@ -21,10 +21,6 @@ const ProfileTweets = ({user, setCurrentPage}) => {
             .catch(error => {
                 console.error('Error fetching tweets:', error);
             })
-            .finally(() => {
-                // Set pageLoaded to true when the request is completed
-                setPageLoaded(true);
-            });
     
         // Fetch retweets
         axios.get(`http://localhost:3002/api/retweets/user/${user.username}`)
@@ -40,7 +36,7 @@ const ProfileTweets = ({user, setCurrentPage}) => {
                 setPageLoaded(true);
             });
     
-    }, [user.username, setPageLoaded]);
+    }, []);
 
     return (
         <Box>

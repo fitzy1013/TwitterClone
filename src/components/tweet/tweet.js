@@ -10,7 +10,9 @@ const Tweet = ({ tweet, filter, setCurrentPage }) => {
   const [pageLoaded, setPageLoaded] = useState(false);
   const [user, setUser] = useState({});
   const [likes, setLikes] = useState([])
+  const [retweets, setRetweets] = useState([])
 
+  console.log(retweets)
   console.log(tweet)
   console.log(filter)
   console.log(likes)
@@ -20,6 +22,12 @@ const Tweet = ({ tweet, filter, setCurrentPage }) => {
     console.log(likes.some(like => like.username == username))
     return likes.some(like => like.username == username)
   }
+
+  const hasUserRetweeted = (username) => {
+    console.log(retweets.some(retweet => retweet.username == username))
+    return retweets.some(retweet => retweet.username == username)
+  }
+
 
   const onProfileClick = () => {
     setCurrentPage("Profile")
@@ -46,22 +54,54 @@ const Tweet = ({ tweet, filter, setCurrentPage }) => {
     }
   }
 
-
-  useEffect(() => {
-    axios
-      .get(`http://localhost:3002/api/users/${tweet.username}`)
-      .then((response) => {
-        setUser(response.data);
-        axios.get(`http://localhost:3002/api/likes/tweet/${tweet._id}`)
-            .then((response2) => {
-                setLikes(response2.data);
-                setPageLoaded(true)
+  const handleLRetweetButtonClicked = async () => {
+    try {
+        if (hasUserRetweeted(sessionStorage.getItem("username"))) {
+            const response = await axios.delete(`http://localhost:3002/api/retweets/${tweet._id}/${sessionStorage.getItem("username")}`)
+            console.log(response.data)
+        }
+        else {
+            const response = await axios.post('http://localhost:3002/api/retweets', {
+                tweetID: tweet._id,
+                username: sessionStorage.getItem("username")
             })
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  }, []);
+            console.log(response)
+        }
+        window.location.reload()
+    } catch (err) {
+        console.log(err.message)
+    }
+  }
+
+
+    useEffect(() => {
+        axios.get(`http://localhost:3002/api/users/${tweet.username}`)
+            .then((response) => {
+                setUser(response.data);
+
+                // Request for likes
+                axios.get(`http://localhost:3002/api/likes/tweet/${tweet._id}`)
+                    .then((response2) => {
+                        setLikes(response2.data);
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching likes:", error);
+                    });
+
+                // Request for retweets
+                axios.get(`http://localhost:3002/api/retweets/tweet/${tweet._id}`)
+                    .then((response3) => {
+                        setRetweets(response3.data);
+                        setPageLoaded(true);
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching retweets:", error);
+                    });
+            })
+            .catch((error) => {
+                console.error("Error fetching user:", error);
+            });
+    }, []);
 
   return (
     <Box>
@@ -103,9 +143,11 @@ const Tweet = ({ tweet, filter, setCurrentPage }) => {
                 </Typography>
               </Box>
               <Box display="flex" flexDirection="row">
-                <CachedOutlinedIcon />
+              <IconButton onClick={handleLRetweetButtonClicked} sx={{bottom: '20%'}}>
+                    {hasUserRetweeted(sessionStorage.getItem("username")) ? <CachedOutlinedIcon sx={{color: 'green'}}/> : <CachedOutlinedIcon/>}
+               </IconButton>
                 <Typography paddingLeft={1}>
-                  <strong>5</strong>
+                  <strong>{retweets.length}</strong>
                 </Typography>
               </Box>
               <Box display="flex" flexDirection="row">
