@@ -19,8 +19,6 @@ const Retweet = ({ retweet }) => {
       setHasQuote(true);
       console.log("Does Have Quote");
     }
-
-
   }, []);
 
   return (
@@ -65,6 +63,7 @@ const Retweet = ({ retweet }) => {
       <Tweet
         tweet={retweet.tweet}
         isEmbed={hasQuote ? true : false}
+        retweet={retweet}
         // changeTweetPopState={changeTweetPopState}
       />
       </Box>}
