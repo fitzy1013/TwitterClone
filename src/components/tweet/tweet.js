@@ -5,7 +5,6 @@ import CachedOutlinedIcon from "@mui/icons-material/CachedOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import axios from "axios";
-import { valid } from "joi";
 
 const Tweet = ({ tweet, filter, setCurrentPage, isEmbed, retweet }) => {
   const [pageLoaded, setPageLoaded] = useState(false);

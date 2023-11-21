@@ -20,13 +20,14 @@ const EditProfileComponent = ({ changeEditProfile, user }) => {
   const [bio, setBio] = useState("");
 
   console.log(bannerImageUrl)
+  console.log(displayImageUrl)
 
   useEffect(() => {
     setBannerImageUrl(user.bannerImageUrl);
     setDisplayImageUrl(user.displayImageUrl);
     setName(user.displayName);
     setBio(user.bio);
-  }, [bannerImageUrl, displayImageUrl]);
+  }, []);
 
   const handleFileUpload = (file, isBannerImage) => {
     // Check the file size here
@@ -39,7 +40,6 @@ const EditProfileComponent = ({ changeEditProfile, user }) => {
       else {
         setDisplayImageUrl(file)
       }
-      // Perform your upload logic here
     }
   };
 
@@ -49,6 +49,7 @@ const EditProfileComponent = ({ changeEditProfile, user }) => {
     user.bio = bio;
     user.displayImageUrl = displayImageUrl;
     user.bannerImageUrl = bannerImageUrl;
+    console.log(user)
     try {
       console.log(user);
       const response = await axios.patch(
@@ -127,7 +128,7 @@ const EditProfileComponent = ({ changeEditProfile, user }) => {
           >
             {/* Add your banner image source here */}
             <img
-              src={user.bannerImageUrl}
+              src={bannerImageUrl}
               alt="Banner"
               style={{
                 width: "100%",
@@ -136,7 +137,7 @@ const EditProfileComponent = ({ changeEditProfile, user }) => {
               }}
             />
             <Avatar
-              src={user.displayImageUrl}
+              src={displayImageUrl}
               sx={{
                 position: "absolute",
                 bottom: 0,
