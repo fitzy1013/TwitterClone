@@ -79,13 +79,7 @@ const Tweet = ({ tweet, filter, setCurrentPage, isEmbed, retweet }) => {
             })
             console.log(response)
         }
-        if (isRetweeted) {
-          setRetweetCount(retweetCount - 1)
-        } else {
-          setRetweetCount(retweetCount + 1)
-        }
-        setIsRteweeted(!isRetweeted)
-        
+        window.location.reload();
     } catch (err) {
         console.log(err.message)
     }
@@ -94,8 +88,8 @@ const Tweet = ({ tweet, filter, setCurrentPage, isEmbed, retweet }) => {
 
     useEffect(() => {
 
-        setIsLiked(hasUserLiked(sessionStorage.getItem("username")))
-        setIsRteweeted(hasUserRetweeted(sessionStorage.getItem("username")))
+      setIsLiked(hasUserLiked(sessionStorage.getItem("username")))
+      setIsRteweeted(hasUserRetweeted(sessionStorage.getItem("username")))
 
         axios.get(`http://localhost:3002/api/users/${tweet.username}`)
             .then((response) => {
@@ -125,7 +119,7 @@ const Tweet = ({ tweet, filter, setCurrentPage, isEmbed, retweet }) => {
             .catch((error) => {
                 console.error("Error fetching user:", error);
             });
-    }, []);
+    }, [pageLoaded]);
 
   return (
     <Box>
