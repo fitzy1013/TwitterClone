@@ -1,0 +1,12 @@
+- Functionality for Quote tweet
+- Functionality to Delete a Tweet
+- Functionality for Replies
+- Ability to upload images to a tweet
+- Giving proper routing/links to pages
+- Further on giving tweets there own pages when interacted with 
+- Filter media tweets
+- Giving timestamps to tweets and then sorting by these timestamps
+- Being able to search tweets and users 
+- Sidebar with random accounts to follow
+- Direct Messaging between accounts
+- Notificiations

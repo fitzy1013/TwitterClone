@@ -5,6 +5,7 @@ import { useIsAuthenticated, useAuthUser } from 'react-auth-kit';
 import LeftSidebar from './leftSideBar';
 import MainContainer from '../components/MainContainer';
 import ImageUploader from './imageuploader';
+import TweetPop from './tweetPop';
 
 
 const Dashborad = () => {
@@ -12,10 +13,16 @@ const Dashborad = () => {
     const [username, setUsername] = useState(null)
     const [currentPage, setCurrentPage] = useState(null)
     const [extraComponentLoaded, setExtraComponentLoaded] = useState()
+    const [tweetPopState, setTweetPopState] = useState(false)
 
     const changeExtraComponentLoaded = () => {
-        setExtraComponentLoaded(value => !value)
+        setExtraComponentLoaded(!extraComponentLoaded)
     }
+
+    const changeTweetPopState = () => {
+        setTweetPopState(!tweetPopState)
+    }
+
 
     console.log(currentPage)
 
@@ -51,11 +58,12 @@ const Dashborad = () => {
         <Container maxWidth={false} disableGutters>
         <Grid container spacing={0}>
             <Grid item xs={3} sx={{borderRight: '1px solid black'}} >
-                <LeftSidebar setCurrentPage={changeCurrentPage} username={username}/>
+                <LeftSidebar setCurrentPage={changeCurrentPage} username={username} changeTweetPopState={changeTweetPopState}/>
             </Grid>
             <Grid item xs={5} sx={{borderRight: '1px solid black'}} >
                 <MainContainer currentPage={currentPage} username={username} setCurrentPage={changeCurrentPage} />
             </Grid>
+            {tweetPopState && <TweetPop changeTweetPopState={changeTweetPopState}/>}
         </Grid>
         </Container>
     )

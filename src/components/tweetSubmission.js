@@ -14,7 +14,6 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import Tweet from "./tweet/tweet";
 
 const TweetSubmission = ({
-  username,
   changeTweetPopState,
   isPop,
   embedTweet,
@@ -23,6 +22,7 @@ const TweetSubmission = ({
   const [tweetError, setTweetError] = useState("");
   const [user, setUser] = useState({});
   const [pageLoaded, setPageLoaded] = useState(false);
+  const username = sessionStorage.getItem("username");
 
   console.log(username);
 
@@ -84,7 +84,7 @@ const TweetSubmission = ({
       sx={{
         display: "flex",
         flexDirection: "column",
-        width: "100%",
+        width: "60%",
         backgroundColor: "white",
         border: "2px solid #1DA1F2",
         borderRadius: 5,
