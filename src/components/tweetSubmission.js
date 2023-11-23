@@ -17,12 +17,12 @@ const TweetSubmission = ({
   changeTweetPopState,
   isPop,
   embedTweet,
+  username
 }) => {
   const [tweetContent, setTweetContent] = useState("");
   const [tweetError, setTweetError] = useState("");
   const [user, setUser] = useState({});
   const [pageLoaded, setPageLoaded] = useState(false);
-  const username = sessionStorage.getItem("username");
 
   console.log(username);
 
@@ -92,7 +92,7 @@ const TweetSubmission = ({
         zIndex: 11,
       }}
     >
-      <Box margin={3}>
+       <Box margin={3}>
         {isPop && (
           <IconButton
             sx={{ float: "right" }}

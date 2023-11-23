@@ -4,7 +4,7 @@ import Tweet from "./tweet/tweet";
 import axios from "axios";
 import Retweet from "./retweet/retweet";
 
-const Tweets = ({tweets, setCurrentPage, retweets}) => {
+const Tweets = ({tweets, setCurrentPage, retweets, changeTweetPopState}) => {
   
   console.log(tweets)
   console.log(retweets)
@@ -12,10 +12,10 @@ const Tweets = ({tweets, setCurrentPage, retweets}) => {
   return (
     <Box>
       {tweets && tweets.map((item, index) => (
-        <Tweet key={index} tweet={item} setCurrentPage={setCurrentPage}/>
+        <Tweet key={index} tweet={item} setCurrentPage={setCurrentPage} changeTweetPopState={changeTweetPopState}/>
       ))}
       {retweets && retweets.map((item, index) => (
-        <Retweet key={index} retweet={item}/>
+        <Retweet key={index} retweet={item} changeTweetPopState={changeTweetPopState}/>
       ))}
     </Box>
   );

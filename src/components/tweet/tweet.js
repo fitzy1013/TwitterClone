@@ -14,8 +14,9 @@ import CachedOutlinedIcon from "@mui/icons-material/CachedOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import axios from "axios";
+import TweetPop from "../tweetPop";
 
-const Tweet = ({ tweet, filter, setCurrentPage, isEmbed, retweet }) => {
+const Tweet = ({ tweet, filter, setCurrentPage, isEmbed, retweet, changeTweetPopState }) => {
   const [pageLoaded, setPageLoaded] = useState(false);
   const [user, setUser] = useState({});
   const [likes, setLikes] = useState([]);
@@ -110,6 +111,11 @@ const Tweet = ({ tweet, filter, setCurrentPage, isEmbed, retweet }) => {
       console.log(err.message);
     }
   };
+
+  const handleRetweetWithQuoteButtonClicked = () => {
+    changeTweetPopState(tweet);
+    handleClose();
+  }
 
   useEffect(() => {
     setIsLiked(hasUserLiked(sessionStorage.getItem("username")));
@@ -213,7 +219,7 @@ const Tweet = ({ tweet, filter, setCurrentPage, isEmbed, retweet }) => {
                   onClose={handleClose}
                 >
                   <MenuItem onClick={handleLRetweetButtonClicked}>Retweet</MenuItem>
-                  <MenuItem onClick={handleClose}>Retweet with Quote</MenuItem>
+                  <MenuItem onClick={handleRetweetWithQuoteButtonClicked}>Retweet with Quote</MenuItem>
                 </Menu>
                 <Typography paddingLeft={1}>
                   <strong>{likeCount}</strong>

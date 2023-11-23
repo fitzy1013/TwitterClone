@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Tweets from '../tweets';
 import axios from 'axios';
 
-const ProfileTweets = ({user, setCurrentPage}) => {
+const ProfileTweets = ({user, setCurrentPage, changeTweetPopState}) => {
 
     const [pageLoaded, setPageLoaded] = useState(false)
     const [tweets, setTweets] = useState([])
@@ -40,7 +40,7 @@ const ProfileTweets = ({user, setCurrentPage}) => {
 
     return (
         <Box>
-            {pageLoaded && <Tweets tweets={tweets} setCurrentPage={setCurrentPage} retweets={retweets}/>}
+            {pageLoaded && <Tweets tweets={tweets} setCurrentPage={setCurrentPage} retweets={retweets} changeTweetPopState={changeTweetPopState}/>}
         </Box>
     )
 }

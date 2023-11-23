@@ -14,12 +14,18 @@ const Dashborad = () => {
     const [currentPage, setCurrentPage] = useState(null)
     const [extraComponentLoaded, setExtraComponentLoaded] = useState()
     const [tweetPopState, setTweetPopState] = useState(false)
+    const [embedTweet, setEmbedTweet] = useState(null)
 
     const changeExtraComponentLoaded = () => {
         setExtraComponentLoaded(!extraComponentLoaded)
     }
 
-    const changeTweetPopState = () => {
+    const changeTweetPopState = (embedTweetTemp) => {
+        if (embedTweetTemp != null) {
+            setEmbedTweet(embedTweetTemp)
+        } else {
+            setEmbedTweet(null)
+        }
         setTweetPopState(!tweetPopState)
     }
 
@@ -61,9 +67,9 @@ const Dashborad = () => {
                 <LeftSidebar setCurrentPage={changeCurrentPage} username={username} changeTweetPopState={changeTweetPopState}/>
             </Grid>
             <Grid item xs={5} sx={{borderRight: '1px solid black'}} >
-                <MainContainer currentPage={currentPage} username={username} setCurrentPage={changeCurrentPage} />
+                <MainContainer currentPage={currentPage} username={username} setCurrentPage={changeCurrentPage} changeTweetPopState={changeTweetPopState}/>
             </Grid>
-            {tweetPopState && <TweetPop changeTweetPopState={changeTweetPopState}/>}
+            {tweetPopState && <TweetPop changeTweetPopState={changeTweetPopState} embedTweet={embedTweet} username={username}/>}
         </Grid>
         </Container>
     )

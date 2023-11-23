@@ -12,7 +12,7 @@ import Tweets from "../tweets";
 import axios from "axios";
 import TweetSubmission from "../tweetSubmission";
 
-const Home = ({ username, setCurrentPage }) => {
+const Home = ({ username, setCurrentPage, changeTweetPopState }) => {
   const [tweetContent, setTweetContent] = useState("");
   const [tweetError, setTweetError] = useState("");
   const [tweets, setTweets] = useState([]);
@@ -113,7 +113,7 @@ const Home = ({ username, setCurrentPage }) => {
           )}
         </Box>
       </Box>
-      <Tweets tweets={tweets} setCurrentPage={setCurrentPage} />
+      <Tweets tweets={tweets} setCurrentPage={setCurrentPage} changeTweetPopState={changeTweetPopState}/>
     </Box>
   );
 };
