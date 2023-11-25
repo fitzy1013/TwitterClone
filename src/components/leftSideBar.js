@@ -32,7 +32,7 @@ const LeftSidebar = ({setCurrentPage, username, changeTweetPopState}) => {
           </Button>
         </Box>
         <Box paddingTop={5}>
-          <Button variant="contained" fullWidth sx={{borderRadius: 5}} onClick={changeTweetPopState}>
+          <Button variant="contained" fullWidth sx={{borderRadius: 5}} onClick={() => changeTweetPopState(null)}>
             Tweet
           </Button>
         </Box>

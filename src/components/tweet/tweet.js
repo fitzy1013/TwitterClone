@@ -107,7 +107,7 @@ const Tweet = ({
         console.log(response.data);
       } else {
         const response = await axios.post(
-          "http://localhost:3002/api/retweets",
+          'http://localhost:3002/api/retweets',
           {
             tweetID: tweetId,
             username: sessionStorage.getItem("username"),
@@ -123,13 +123,15 @@ const Tweet = ({
 
   const handleDeleteTweet = async () => {
     try {
-      const response = axios.delete(`http://localhost:3002/api/tweets/${tweet._id}`);
-      console.log(response)
-      setIsDeleted(true)
+      const response = axios.delete(
+        `http://localhost:3002/api/tweets/${tweet._id}`
+      );
+      console.log(response);
+      setIsDeleted(true);
     } catch (err) {
       console.log(err.message);
     }
-  }
+  };
 
   const handleRetweetWithQuoteButtonClicked = () => {
     changeTweetPopState(tweet);
@@ -137,9 +139,6 @@ const Tweet = ({
   };
 
   useEffect(() => {
-    setIsLiked(hasUserLiked(sessionStorage.getItem("username")));
-    setIsRteweeted(hasUserRetweeted(sessionStorage.getItem("username")));
-
     axios
       .get(`http://localhost:3002/api/users/${tweet.username}`)
       .then((response) => {
@@ -171,11 +170,15 @@ const Tweet = ({
       .catch((error) => {
         console.error("Error fetching user:", error);
       });
+
+    setIsLiked(hasUserLiked(sessionStorage.getItem("username")));
+    setIsRteweeted(hasUserRetweeted(sessionStorage.getItem("username")));
+
   }, [pageLoaded]);
 
   return (
     <Box>
-      {(pageLoaded && !isDeleted) && (
+      {pageLoaded && !isDeleted && (
         <Box
           marginTop={2}
           paddingBottom={2}
@@ -198,9 +201,11 @@ const Tweet = ({
           <Box sx={{ width: "100%", display: "flex", flexDirection: "column" }}>
             <Typography variant="body1">
               <strong>{user.displayName}</strong> @{tweet.username}
-              {!retweet && <Box sx={{ float: "right"}}>
-                <OptionTweets handleDeleteTweet={handleDeleteTweet} />
-              </Box>}
+              {!retweet && (
+                <Box sx={{ float: "right" }}>
+                  <OptionTweets handleDeleteTweet={handleDeleteTweet} />
+                </Box>
+              )}
             </Typography>
             <Typography paddingTop={1} variant="body1">
               {tweet.content}
