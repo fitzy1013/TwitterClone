@@ -1,4 +1,3 @@
-- Functionality for Quote tweet
 - Functionality to Delete a Tweet
 - Functionality for Replies
 - Ability to upload images to a tweet

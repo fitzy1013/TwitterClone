@@ -15,8 +15,16 @@ import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlin
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import axios from "axios";
 import TweetPop from "../tweetPop";
+import OptionTweets from "../optionsTweet";
 
-const Tweet = ({ tweet, filter, setCurrentPage, isEmbed, retweet, changeTweetPopState }) => {
+const Tweet = ({
+  tweet,
+  filter,
+  setCurrentPage,
+  isEmbed,
+  retweet,
+  changeTweetPopState,
+}) => {
   const [pageLoaded, setPageLoaded] = useState(false);
   const [user, setUser] = useState({});
   const [likes, setLikes] = useState([]);
@@ -27,6 +35,7 @@ const Tweet = ({ tweet, filter, setCurrentPage, isEmbed, retweet, changeTweetPop
   const [likeCount, setLikeCount] = useState(0);
   const [retweetCount, setRetweetCount] = useState(0);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [isDeleted, setIsDeleted] = useState(false);
   const open = Boolean(anchorEl);
 
   console.log(retweets);
@@ -112,10 +121,20 @@ const Tweet = ({ tweet, filter, setCurrentPage, isEmbed, retweet, changeTweetPop
     }
   };
 
+  const handleDeleteTweet = async () => {
+    try {
+      const response = axios.delete(`http://localhost:3002/api/tweets/${tweet._id}`);
+      console.log(response)
+      setIsDeleted(true)
+    } catch (err) {
+      console.log(err.message);
+    }
+  }
+
   const handleRetweetWithQuoteButtonClicked = () => {
     changeTweetPopState(tweet);
     handleClose();
-  }
+  };
 
   useEffect(() => {
     setIsLiked(hasUserLiked(sessionStorage.getItem("username")));
@@ -156,7 +175,7 @@ const Tweet = ({ tweet, filter, setCurrentPage, isEmbed, retweet, changeTweetPop
 
   return (
     <Box>
-      {pageLoaded && (
+      {(pageLoaded && !isDeleted) && (
         <Box
           marginTop={2}
           paddingBottom={2}
@@ -179,6 +198,9 @@ const Tweet = ({ tweet, filter, setCurrentPage, isEmbed, retweet, changeTweetPop
           <Box sx={{ width: "100%", display: "flex", flexDirection: "column" }}>
             <Typography variant="body1">
               <strong>{user.displayName}</strong> @{tweet.username}
+              {!retweet && <Box sx={{ float: "right"}}>
+                <OptionTweets handleDeleteTweet={handleDeleteTweet} />
+              </Box>}
             </Typography>
             <Typography paddingTop={1} variant="body1">
               {tweet.content}
@@ -201,26 +223,29 @@ const Tweet = ({ tweet, filter, setCurrentPage, isEmbed, retweet, changeTweetPop
                     <CachedOutlinedIcon />
                   )}
                 </IconButton>
+                <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+                  <MenuItem onClick={handleLRetweetButtonClicked}>
+                    Retweet
+                  </MenuItem>
+                  <MenuItem onClick={handleRetweetWithQuoteButtonClicked}>
+                    Retweet with Quote
+                  </MenuItem>
+                </Menu>
                 <Typography paddingLeft={1}>
                   <strong>{retweetCount}</strong>
                 </Typography>
               </Box>
               <Box display="flex" flexDirection="row">
-                <IconButton onClick={handleLikeButtonClicked} sx={{ bottom: "20%" }}>
+                <IconButton
+                  onClick={handleLikeButtonClicked}
+                  sx={{ bottom: "20%" }}
+                >
                   {isLiked ? (
                     <FavoriteIcon sx={{ color: "red" }} />
                   ) : (
                     <FavoriteBorderOutlinedIcon />
                   )}
                 </IconButton>
-                <Menu
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleClose}
-                >
-                  <MenuItem onClick={handleLRetweetButtonClicked}>Retweet</MenuItem>
-                  <MenuItem onClick={handleRetweetWithQuoteButtonClicked}>Retweet with Quote</MenuItem>
-                </Menu>
                 <Typography paddingLeft={1}>
                   <strong>{likeCount}</strong>
                 </Typography>
