@@ -1,12 +1,5 @@
 const mongoose = require('mongoose');
-
-// Reply Schema
-const replySchema = mongoose.Schema({
-    tweet: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Tweet'
-    }
-});
+const replySchema = require('../schemas/replySchema')
 
 // Tweet Schema
 const tweetSchema = mongoose.Schema({
@@ -30,9 +23,4 @@ const tweetSchema = mongoose.Schema({
 });
 
 // Tweet Model
-const Tweet = mongoose.model('Tweet', tweetSchema);
-
-module.exports = {
-    Tweet,
-    Reply: mongoose.model('Reply', replySchema)
-};
+module.exports = mongoose.model('Tweet', tweetSchema);
