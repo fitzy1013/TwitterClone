@@ -3,7 +3,7 @@ const router = express.Router();
 const Tweet = require("../models/tweet");
 const User = require("../models/user");
 const Retweet = require("../models/retweet");
-const Reply = require("../models/tweet");
+const Reply = require("../models/reply");
 const { ObjectId } = require('mongodb');
 
 /* Required Functions
@@ -21,45 +21,6 @@ router.get("/", async (req, res) => {
   try {
     const tweets = await Tweet.find();
     res.status(200).json(tweets);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-// get all replies
-router.get("/replies", async (req, res) => {
-  try {
-    const replies = await Reply.find();
-    res.status(200).json(replies);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-// get replies for a specific tweet
-router.get("/:tweetId/replies", async (req, res) => {
-  const tweetId = req.params.tweetId;
-  try {
-    const replies = await Reply.find({ tweet: tweetId });
-    res.status(200).json(replies);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-// post a reply to a tweet
-router.post("/:tweetId/replies", async (req, res) => {
-  const tweetId = req.params.tweetId;
-  const { username, content } = req.body;
-  const reply = new Reply({
-    username,
-    content,
-    tweet: tweetId,
-  });
-
-  try {
-    await reply.save();
-    res.status(201).json({ message: "Reply added successfully" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

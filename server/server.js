@@ -22,13 +22,14 @@ const tweetRouter = require('./routes/tweet')
 const followRouter = require('./routes/follow')
 const likesRouter = require('./routes/likes')
 const retweetRouter = require('./routes/retweet')
+const repliesRouter = require('./routes/reply')
 
 app.use('/api/users', userRouter)
 app.use('/api/tweets', tweetRouter)
 app.use('/api/follows', followRouter)
 app.use('/api/likes', likesRouter)
 app.use('/api/retweets', retweetRouter)
-
+app.use('/api/replies', repliesRouter)
 
 // Start the server
 const port = process.env.PORT || 3002;
