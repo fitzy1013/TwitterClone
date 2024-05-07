@@ -1,0 +1,40 @@
+- Functionality for Replies
+- Ability to upload images to a tweet
+- Giving proper routing/links to pages
+- Further on giving tweets there own pages when interacted with 
+- Filter media tweets
+- Giving timestamps to tweets and then sorting by these timestamps
+- Being able to search tweets and users 
+- Sidebar with random accounts to follow
+- Direct Messaging between accounts
+- Notificiations
+
+
+-------------------------------------------------------------------
+
+Options for Deleting Tweets and how to handle when it comes to the retweets
+Requirements: 
+
+1. Original Tweet to be deleted
+2. Indication in any quote tweet that the original tweet has been deleted
+
+How to be done Options: 
+
+1. Run a api call that changes all the tweets in retweets that match the id of the tweet deleted to being empty and then when an empty is detected on the frontend can just
+run text in the embed section that says "Tweet has been Deleted or is Unavailable" 
+
+Current Issue with Retweets and Deleting Retweets
+
+The current method is used to search for a specific tweet and username combination under a retweet
+This would be applicable for retweets without a quote however when quotes are involved multiple tweets can have quotes
+For the first method there should be a check to whether the retweet has a quote. This can be done by changing the search parameters
+If a record is found not having a quote this method can be used. 
+On the frontend it also needs to recognise in the count or activeness whether this is the case with the retweets
+When an individual retwwet with quote is deleted it can just be done using only the id of the retweet
+
+---------------------------------------------------------------
+Replies Plan
+
+- Make a child object of tweet which includes the repplied tweet and can be identified as a reply
+- For the visual aspect need to create an individual page for the original tweet which will show the Replies
+
