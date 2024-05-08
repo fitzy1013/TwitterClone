@@ -15,12 +15,14 @@ const Dashborad = () => {
     const [extraComponentLoaded, setExtraComponentLoaded] = useState()
     const [tweetPopState, setTweetPopState] = useState(false)
     const [embedTweet, setEmbedTweet] = useState(null)
+    const [isReplyState, setIsReplyState] = useState(false)
 
     const changeExtraComponentLoaded = () => {
         setExtraComponentLoaded(!extraComponentLoaded)
     }
 
-    const changeTweetPopState = (embedTweetTemp) => {
+    const changeTweetPopState = (embedTweetTemp, isReply) => {
+        console.log(isReply)
         if (embedTweetTemp != null) {
             setEmbedTweet(embedTweetTemp)
         } else {
@@ -69,7 +71,7 @@ const Dashborad = () => {
             <Grid item xs={5} sx={{borderRight: '1px solid black'}} >
                 <MainContainer currentPage={currentPage} username={username} setCurrentPage={changeCurrentPage} changeTweetPopState={changeTweetPopState}/>
             </Grid>
-            {tweetPopState && <TweetPop changeTweetPopState={changeTweetPopState} embedTweet={embedTweet} username={username}/>}
+            {tweetPopState && <TweetPop changeTweetPopState={changeTweetPopState} embedTweet={embedTweet} username={username} isReply={isReplyState}/>}
         </Grid>
         </Container>
     )

@@ -133,7 +133,7 @@ const Tweet = ({
   };
 
   const handleRetweetWithQuoteButtonClicked = () => {
-    changeTweetPopState(tweet);
+    changeTweetPopState(tweet, false);
     handleClose();
   };
 

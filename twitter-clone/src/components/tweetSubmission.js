@@ -96,7 +96,7 @@ const TweetSubmission = ({
         {isPop && (
           <IconButton
             sx={{ float: "right" }}
-            onClick={() => changeTweetPopState()}
+            onClick={() => changeTweetPopState(null, false)}
           >
             <CancelIcon />
           </IconButton>
