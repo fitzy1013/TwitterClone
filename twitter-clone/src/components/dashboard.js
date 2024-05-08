@@ -22,11 +22,14 @@ const Dashborad = () => {
     }
 
     const changeTweetPopState = (embedTweetTemp, isReply) => {
-        console.log(isReply)
         if (embedTweetTemp != null) {
             setEmbedTweet(embedTweetTemp)
         } else {
             setEmbedTweet(null)
+        }
+
+        if (isReply != null) {
+            setIsReplyState(isReply);
         }
         setTweetPopState(!tweetPopState)
     }

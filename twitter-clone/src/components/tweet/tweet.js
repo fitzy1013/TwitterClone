@@ -26,6 +26,7 @@ const Tweet = ({
   const [user, setUser] = useState({});
   const [likes, setLikes] = useState([]);
   const [retweets, setRetweets] = useState([]);
+  const [replies, setReplies] = useState([]);
   const tweetId = retweet && isEmbed ? retweet._id : tweet._id;
   const [isLiked, setIsLiked] = useState(false);
   const [isRetweeted, setIsRteweeted] = useState(false);
@@ -49,7 +50,7 @@ const Tweet = ({
   };
 
   const hasUserRetweeted = (username) => {
-    console.log(retweets)
+    console.log(retweets);
     console.log(retweets.some((retweet) => retweet.username === username));
     return retweets.some((retweet) => retweet.username === username);
   };
@@ -95,6 +96,12 @@ const Tweet = ({
     setAnchorEl(null);
   };
 
+  const handleReplyButtonClicked = async () => {
+    // send a tweet pop state and then handleClose();
+    changeTweetPopState(tweet, true);
+    handleClose();
+  };
+
   const handleLRetweetButtonClicked = async () => {
     try {
       if (hasUserRetweeted(sessionStorage.getItem("username"))) {
@@ -106,7 +113,7 @@ const Tweet = ({
         console.log(response.data);
       } else {
         const response = await axios.post(
-          'http://localhost:3002/api/retweets',
+          "http://localhost:3002/api/retweets",
           {
             tweetID: tweetId,
             username: sessionStorage.getItem("username"),
@@ -172,7 +179,6 @@ const Tweet = ({
 
     setIsLiked(hasUserLiked(sessionStorage.getItem("username")));
     setIsRteweeted(hasUserRetweeted(sessionStorage.getItem("username")));
-
   }, [pageLoaded]);
 
   return (
@@ -200,60 +206,71 @@ const Tweet = ({
           <Box sx={{ width: "100%", display: "flex", flexDirection: "column" }}>
             <Typography variant="body1">
               <strong>{user.displayName}</strong> @{tweet.username}
-                <Box sx={{ float: "right" }}>
-                  <OptionTweets handleDeleteTweet={handleDeleteTweet} username={username} tweetUser={tweet.username}/>
-                </Box>
+              <Box sx={{ float: "right" }}>
+                <OptionTweets
+                  handleDeleteTweet={handleDeleteTweet}
+                  username={username}
+                  tweetUser={tweet.username}
+                />
+              </Box>
             </Typography>
             <Typography paddingTop={1} variant="body1">
               {tweet.content}
             </Typography>
-            {!isEmbed && <Box
-              paddingTop={2}
-              sx={{ display: "flex", flexDirection: "row", gap: 5 }}
-            >
-              <Box display="flex" flexDirection="row">
-                <ChatBubbleOutlineIcon />
-                <Typography paddingLeft={1}>
-                  <strong>5</strong>
-                </Typography>
+            {!isEmbed && (
+              <Box
+                paddingTop={2}
+                sx={{ display: "flex", flexDirection: "row", gap: 5 }}
+              >
+                <Box display="flex" flexDirection="row">
+                  <IconButton
+                    onClick={handleReplyButtonClicked}
+                    sx={{ bottom: "20%" }}
+                  >
+                    <ChatBubbleOutlineIcon />
+                  </IconButton>
+                  <Typography paddingLeft={1}>
+                    <strong>5</strong>
+                  </Typography>
+                </Box>
+                <Box display="flex" flexDirection="row">
+                  <IconButton onClick={handleClick} sx={{ bottom: "20%" }}>
+                    {isRetweeted ? (
+                      <CachedOutlinedIcon sx={{ color: "green" }} />
+                    ) : (
+                      <CachedOutlinedIcon />
+                    )}
+                  </IconButton>
+                  <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+                    <MenuItem onClick={handleLRetweetButtonClicked}>
+                      Retweet
+                    </MenuItem>
+                    <MenuItem onClick={handleRetweetWithQuoteButtonClicked}>
+                      Retweet with Quote
+                    </MenuItem>
+                  </Menu>
+                  <Typography paddingLeft={1}>
+                    <strong>{retweetCount}</strong>
+                  </Typography>
+                </Box>
+                <Box display="flex" flexDirection="row">
+                  <IconButton
+                    onClick={handleLikeButtonClicked}
+                    sx={{ bottom: "20%" }}
+                  >
+                    {isLiked ? (
+                      <FavoriteIcon sx={{ color: "red" }} />
+                    ) : (
+                      <FavoriteBorderOutlinedIcon />
+                    )}
+                  </IconButton>
+                  <Typography paddingLeft={1}>
+                    <strong>{likeCount}</strong>
+                  </Typography>
+                </Box>
               </Box>
-              <Box display="flex" flexDirection="row">
-                <IconButton onClick={handleClick} sx={{ bottom: "20%" }}>
-                  {isRetweeted ? (
-                    <CachedOutlinedIcon sx={{ color: "green" }} />
-                  ) : (
-                    <CachedOutlinedIcon />
-                  )}
-                </IconButton>
-                <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-                  <MenuItem onClick={handleLRetweetButtonClicked}>
-                    Retweet
-                  </MenuItem>
-                  <MenuItem onClick={handleRetweetWithQuoteButtonClicked}>
-                    Retweet with Quote
-                  </MenuItem>
-                </Menu>
-                <Typography paddingLeft={1}>
-                  <strong>{retweetCount}</strong>
-                </Typography>
-              </Box>
-              <Box display="flex" flexDirection="row">
-                <IconButton
-                  onClick={handleLikeButtonClicked}
-                  sx={{ bottom: "20%" }}
-                >
-                  {isLiked ? (
-                    <FavoriteIcon sx={{ color: "red" }} />
-                  ) : (
-                    <FavoriteBorderOutlinedIcon />
-                  )}
-                </IconButton>
-                <Typography paddingLeft={1}>
-                  <strong>{likeCount}</strong>
-                </Typography>
-              </Box>
-            </Box> }
-          </Box> 
+            )}
+          </Box>
         </Box>
       )}
     </Box>
