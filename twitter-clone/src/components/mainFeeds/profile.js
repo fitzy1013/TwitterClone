@@ -66,7 +66,7 @@ const Profile = ({
     axios
       .get(`http://localhost:3002/api/users/${userInput}`)
       .then((response) => {
-        setUser(response.data);
+        setUser(response.data[0]);
         setPageLoaded(true);
       })
       .catch((error) => {

@@ -12,6 +12,8 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import axios from "axios";
 import FileBase64 from "react-file-base64";
+import imageCompression from "browser-image-compression"
+import imageType from 'image-type';
 
 const EditProfileComponent = ({ changeEditProfile, user }) => {
   const [displayImageUrl, setDisplayImageUrl] = useState("");
@@ -19,7 +21,6 @@ const EditProfileComponent = ({ changeEditProfile, user }) => {
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
 
-  console.log(bannerImageUrl)
   console.log(displayImageUrl)
 
   useEffect(() => {
@@ -29,19 +30,38 @@ const EditProfileComponent = ({ changeEditProfile, user }) => {
     setBio(user.bio);
   }, []);
 
-  const handleFileUpload = (file, isBannerImage) => {
-    // Check the file size here
-    if (file.size > 2 * 1024 * 1024) {
-      alert('File size exceeds 5 MB. Please choose a smaller file.');
-    } else {
-      if (isBannerImage) {
-        setBannerImageUrl(file)
-      }
-      else {
-        setDisplayImageUrl(file)
-      }
+  async function handleFileUpload(event, isBannerImage) {
+    const imageFile = event.target.files[0];
+    console.log('originalFile instanceof Blob', imageFile instanceof Blob); // true
+    console.log(`originalFile size ${imageFile.size / 1024 / 1024} MB`);
+  
+    const options = {
+      maxSizeMB: 0.2,
+      maxWidthOrHeight: 500,
+      useWebWorker: true
+    };
+  
+    try {
+      const compressedFile = await imageCompression(imageFile, options);
+      console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
+      console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
+      
+      // Convert the compressed file to base64
+      const reader = new FileReader();
+      reader.readAsDataURL(compressedFile);
+      reader.onloadend = () => {
+        const base64Data = reader.result;
+        if (isBannerImage) {
+          setBannerImageUrl(base64Data);
+        } else {
+          setDisplayImageUrl(base64Data);
+        }
+      };
+    } catch (error) {
+      console.log(error);
     }
-  };
+  }
+  
 
   const saveChanges = async (e) => {
     e.preventDefault();
@@ -62,6 +82,7 @@ const EditProfileComponent = ({ changeEditProfile, user }) => {
       console.log(err.message);
     }
   };
+
 
   return (
     <Box
@@ -152,19 +173,13 @@ const EditProfileComponent = ({ changeEditProfile, user }) => {
         <Typography variant="body1">
           Update Display Picture
         </Typography>
-        <FileBase64
-            multiple={false}
-            onDone={({ base64 }) => handleFileUpload(base64, false)}
-          />
+        <input type="file" accept="image/*" onChange={event => handleFileUpload(event, false)}/>
         </Box>
         <Box sx={{display: 'flex', flexDirection: 'row' , gap: 2, padding: 1, border: '1px double black', borderRadius: 5, marginLeft: 5, marginRight: 5, marginTop: 2, marginBottom: 1}}>
         <Typography variant="body1">
           Update Banner Image
         </Typography>
-        <FileBase64
-            multiple={false}
-            onDone={({ base64 }) => handleFileUpload(base64, true)}
-          />
+        <input type="file" accept="image/*" onChange={event => handleFileUpload(event, true)}/>
         </Box>
         <TextField
           sx={{ textAlign: "left", margin: 2 }}

@@ -94,22 +94,28 @@ router.post('/login', async (req, res) => {
 
 // update user
 router.patch('/:username', getUser, async (req, res) => {
+    console.log("request body")
     console.log(req.body)
+    console.log("current user")
+    console.log(res.user[0])
     if (req.body.displayImageUrl != null) {
-        res.user.displayImageUrl = req.body.displayImageUrl
+        res.user[0].displayImageUrl = req.body.displayImageUrl
     }
     if (req.body.bannerImageUrl != null) {
-        res.user.bannerImageUrl = req.body.bannerImageUrl
+        res.user[0].bannerImageUrl = req.body.bannerImageUrl
     }
     if (req.body.bio != null) {
-        res.user.bio = req.body.bio
+        res.user[0].bio = req.body.bio
     }
     if (req.body.displayName != null) {
-        res.user.displayName = req.body.displayName
+        res.user[0].displayName = req.body.displayName
     }
 
+    console.log("user after updates")
+    console.log(res.user[0])
+
     try {
-        const updatedUser = await res.user.save()
+        const updatedUser = await res.user[0].save()
         res.json(updatedUser)
     } catch (err)  {
         res.status(400).json({message: err.message})
@@ -119,7 +125,7 @@ router.patch('/:username', getUser, async (req, res) => {
 async function getUser(req, res, next) {
     let user
     try {
-      user = await User.findOne({username: req.params.username})
+      user = await User.find({username: req.params.username}).limit(1).sort({ _id: 1 });
       if (user.length < 1) {
         return res.status(404).json({ message: 'Cannot find user' })
       }

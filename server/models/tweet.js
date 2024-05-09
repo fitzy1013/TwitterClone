@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const replySchema = require('../schemas/replySchema')
+const retweetSchema = require('../schemas/retweetSchema')
+const likesSchema = require('../schemas/likesSchema');
 
 // Tweet Schema
 const tweetSchema = mongoose.Schema({
@@ -16,10 +18,9 @@ const tweetSchema = mongoose.Schema({
         required: true,
         default: Date.now
     },
-    likes: [{
-        username: String
-    }],
-    replies: [replySchema] 
+    likes: [likesSchema],
+    replies: [replySchema],
+    retweets: [retweetSchema] 
 });
 
 // Tweet Model

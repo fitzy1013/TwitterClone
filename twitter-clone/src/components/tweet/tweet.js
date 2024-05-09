@@ -35,7 +35,7 @@ const Tweet = ({
   const [anchorEl, setAnchorEl] = useState(null);
   const [isDeleted, setIsDeleted] = useState(false);
   const open = Boolean(anchorEl);
-  const username = sessionStorage.getItem("username");
+  const [username, setUsername] = useState(null);
 
   console.log(retweets);
   console.log(tweet);
@@ -63,20 +63,22 @@ const Tweet = ({
 
   const handleLikeButtonClicked = async () => {
     try {
-      if (hasUserLiked(sessionStorage.getItem("username"))) {
+      const username = sessionStorage.getItem("username");
+      const body = {
+        username,
+        itemId: tweetId
+      };
+  
+      if (hasUserLiked(username)) {
         const response = await axios.delete(
-          `http://localhost:3002/api/likes/${tweetId}/${sessionStorage.getItem(
-            "username"
-          )}`
+          `http://localhost:3002/api/likes/${tweetId}/${username}`
         );
         console.log(response.data);
       } else {
-        const response = await axios.post("http://localhost:3002/api/likes", {
-          tweetID: tweetId,
-          username: sessionStorage.getItem("username"),
-        });
+        const response = await axios.post("http://localhost:3002/api/likes", body);
         console.log(response);
       }
+  
       if (isLiked) {
         setLikeCount(likeCount - 1);
       } else {
@@ -87,6 +89,7 @@ const Tweet = ({
       console.log(err.message);
     }
   };
+  
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -116,7 +119,7 @@ const Tweet = ({
           "http://localhost:3002/api/retweets",
           {
             tweetID: tweetId,
-            username: sessionStorage.getItem("username"),
+            username: username,
           }
         );
         console.log(response);
@@ -149,37 +152,20 @@ const Tweet = ({
       .get(`http://localhost:3002/api/users/${tweet.username}`)
       .then((response) => {
         setUser(response.data);
-
-        // Request for likes
-        axios
-          .get(`http://localhost:3002/api/likes/tweet/${tweetId}`)
-          .then((response2) => {
-            setLikes(response2.data);
-            setLikeCount(response2.data.length);
-          })
-          .catch((error) => {
-            console.error("Error fetching likes:", error);
-          });
-
-        // Request for retweets
-        axios
-          .get(`http://localhost:3002/api/retweets/tweetNoQuote/${tweetId}`)
-          .then((response3) => {
-            setRetweets(response3.data);
-            setRetweetCount(response3.data.length);
-            setPageLoaded(true);
-          })
-          .catch((error) => {
-            console.error("Error fetching retweets:", error);
-          });
       })
       .catch((error) => {
         console.error("Error fetching user:", error);
       });
 
+    setUsername(sessionStorage.getItem("username"))
+    setLikes(tweet.likes);
+    setLikeCount(tweet.likes.length);
+    setRetweets(tweet.retweets);
+    setRetweetCount(tweet.retweets.length);
+    setPageLoaded(true);
     setIsLiked(hasUserLiked(sessionStorage.getItem("username")));
     setIsRteweeted(hasUserRetweeted(sessionStorage.getItem("username")));
-  }, [pageLoaded]);
+  }, [pageLoaded, tweet]);
 
   return (
     <Box>

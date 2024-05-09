@@ -21,7 +21,7 @@ const ProfileLikes = ({user, setCurrentPage, changeTweetPopState}) => {
 
     useEffect(() => {
         setPageLoaded(false)
-        axios.get(`http://localhost:3002/api/likes/tweetLikes/${user.username}`)
+        axios.get(`http://localhost:3002/api/likes/user/${user.username}`)
             .then(response => {
                 console.log(response)
                 setTweets(response.data)
@@ -34,7 +34,7 @@ const ProfileLikes = ({user, setCurrentPage, changeTweetPopState}) => {
 
     return (
         <Box>
-            {pageLoaded && <Tweets tweets={[...tweets]} setCurrentPage={setCurrentPage} changeTweetPopState={changeTweetPopState}/>}
+            {pageLoaded && <Tweets tweets={tweets.tweets} setCurrentPage={setCurrentPage} changeTweetPopState={changeTweetPopState}/>}
         </Box>
     )
 }

@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const likesSchema = require('./likesSchema');
+
 const replySchema = mongoose.Schema({
     // Include fields from tweetSchema
     username: {
@@ -14,17 +16,19 @@ const replySchema = mongoose.Schema({
         required: true,
         default: Date.now
     },
-    likes: [{
-        username: String
-    }],
+    likes: [likesSchema],
     // Reference to the parent tweet
-    tweet: {
+    item: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Tweet',
         required: true
     },
     // Array to store replies to this reply
-    replies: [this] // Reference to the same schema (self-referencing)
+    replies: [this], // Reference to the same schema (self-referencing)
+    retweets: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Retweet'
+    }]
 });
 
 module.exports = replySchema;

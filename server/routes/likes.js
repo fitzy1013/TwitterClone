@@ -3,116 +3,115 @@ const router = express.Router();
 const User = require("../models/user");
 const Like = require("../models/likes");
 const Tweet = require("../models/tweet");
-
-/*
-get all likes for a specific tweetID
-get all likes from a specific user
-post a new like record and then delete one when un-liked
-*/
+const Retweet = require("../models/retweet");
 
 // get all likes records
 router.get("/", async (req, res) => {
   try {
     const likes = await Like.find();
-    res.status(201).json(likes);
+    res.status(200).json(likes);
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    res.status(500).json({ message: err.message });
   }
 });
 
+// get all likes for a specific tweet or retweet
+router.get('/item/:itemId', async (req, res) => {
+  const itemId = req.params.itemId;
+  try {
+    const likes = await Like.find({ item: itemId });
+    res.status(200).json(likes);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
-// get all likes for a specific tweet
-router.get('/tweet/:tweetID', async (req, res) => {
-    let tweets
-    try {
-        tweets = await Like.find({ tweetID: req.params.tweetID })
-        res.status(201).json(tweets)
-    } catch (err) {
-        return res.status(500).json({ message: err.message });
-    }
-})
+// get likes for a specific user and tweet or retweet
+router.get('/search/:username/:itemId', async (req, res) => {
+  const { username, itemId } = req.params;
+  try {
+    const like = await Like.findOne({ item: itemId, username });
+    res.status(200).json(like);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
-router.get('/search/:username/:tweetID', async (req, res) => {
-    try {
-        let like = await Like.find({tweetID: req.params.tweetID, username: req.params.username})
-        res.status(201).json(like)
-    } catch (err) {
-        return res.status(500).json({ message: err.message });
-    }
-})
-
-router.get('/tweetLikes/:username', async (req, res) => {
-    let data = []
-    try {
-        let likes =  await Like.find({username: req.params.username})
-        for (var i = 0; i < likes.length; i++) {
-            let tweet = await Tweet.findById(likes[i].tweetID)
-            data.push(tweet)
-        }
-        res.status(201).json(data)
-    }  catch (err) {
-        return res.status(500).json({ message: err.message });
-    }
-})
-
-// get all likes for a specific user
+// get all tweets or retweets liked by a specific user
 router.get('/user/:username', async (req, res) => {
-    let tweets
-    try {
-        tweets = await Like.find({ username: req.params.username })
-        res.status(201).json(tweets)
-    } catch (err) {
-        return res.status(500).json({ message: err.message });
-    }
-})
+  const username = req.params.username;
+  try {
+    const likes = await Like.find({ username });
+    const itemIds = likes.map(like => like.item);
+    const tweets = await Tweet.find({ _id: { $in: itemIds } });
+    const retweets = await Retweet.find({ _id: { $in: itemIds } });
+    res.status(200).json({ tweets, retweets });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
+// post a like
 router.post('/', async (req, res) => {
-    try {
-        const user = await User.find({ username: req.body.username })
-        if (user.length < 1) {
-            return res.status(400).json({ message: "This user does not exist in our database" })
-        }
-        const tweet = await Tweet.findById(req.body.tweetID)
-        console.log(tweet)
-        if (tweet == null) {
-            return res.status(400).json({ message: "This tweet does not exist in our database" })
-        }
-    } catch (err) { 
-        return res.status(500).json({ message: err.message });
+  const { username, itemId } = req.body;
+  try {
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(400).json({ message: "This user does not exist in our database" });
     }
 
-    const like = new Like({
-        username: req.body.username,
-        tweetID: req.body.tweetID
-    })
-
-    try {
-        const newLike = await like.save();
-        res.status(201).json(newLike)
-    } catch (err) {
-        return res.status(400).json({ message: err.message });
+    // Check if the item is a tweet or a retweet
+    let item;
+    const tweet = await Tweet.findById(itemId);
+    console.log
+    if (tweet) {
+      item = tweet;
+    } else {
+      const retweet = await Retweet.findById(itemId);
+      if (retweet) {
+        item = retweet;
+      } else {
+        return res.status(400).json({ message: "This item does not exist in our database" });
+      }
     }
-})
 
+    // Create and save the like
+    const like = new Like({ username, item: itemId });
+    await like.save();
+
+    // Update likes in tweet or retweet schema
+    item.likes.push(like);
+    await item.save();
+
+    res.status(201).json(like);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// delete a like
 router.delete("/:id/:username", async (req, res) => {
-    let like;
-    try {
-        like = await Like.find({tweetID: req.params.id, username: req.params.username});
-        if (like == null) {
-            return res
-                .status(400)
-                .json({ message: "Like under this ID doesn't exist" });
-        }
-    } catch (err) {
-        return res.status(500).json({ message: err.message });
+  const { id, username } = req.params;
+  console.log(id);
+  console.log(username);
+  try {
+    // Find and delete the like
+    const like = await Like.findOneAndDelete({ item: id, username });
+    if (!like) {
+      return res.status(400).json({ message: "Like under this ID doesn't exist" });
     }
 
-    try {
-        await Like.findOneAndDelete({ tweetID: req.params.id, username: req.params.username })
-        res.status(201).json({ message: "Record Deleted Succesfuly" })
-    } catch (err) {
-        res.status(500).json({ message: err.message });
+    // Update likes in tweet or retweet schema
+    const item = await Tweet.findById(id) || await Retweet.findById(id);
+    if (item) {
+      await item.updateOne({ $pull: { likes: like._id } });
     }
+
+    res.status(200).json({ message: "Record Deleted Successfully" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
 
 module.exports = router;
+

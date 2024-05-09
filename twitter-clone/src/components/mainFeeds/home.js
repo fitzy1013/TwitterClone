@@ -19,24 +19,27 @@ const Home = ({ username, setCurrentPage, changeTweetPopState }) => {
   const [pageLoaded, setPageLoaded] = useState(false);
   const [user, setUser] = useState({});
 
+  console.log(user)
+
   pageLoaded && console.log(tweets);
 
   useEffect(() => {
-    setPageLoaded(false);
-    axios
-      .get("http://localhost:3002/api/tweets")
-      .then((response) => {
-        setTweets(response.data);
-        axios
-          .get(`http://localhost:3002/api/users/${username}`)
-          .then((response) => {
-            setUser(response.data);
-          });
-        setPageLoaded(true);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+    if (!pageLoaded) {
+      axios
+        .get("http://localhost:3002/api/tweets")
+        .then((response) => {
+          setTweets(response.data);
+          axios
+            .get(`http://localhost:3002/api/users/${username}`)
+            .then((response) => {
+              setUser(response.data);
+            });
+          setPageLoaded(true);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
   }, [pageLoaded]);
 
   const onSumbitTweet = async (e) => {

@@ -1,14 +1,4 @@
 const mongoose = require('mongoose')
-
-const likesSchema = mongoose.Schema({
-    tweetID: {
-		type: String,
-		required: true
-	},
-    username : {
-        type: String,
-        required: true
-    }
-})
+const likesSchema = require('../schemas/likesSchema')
 
 module.exports = mongoose.model('Likes', likesSchema)

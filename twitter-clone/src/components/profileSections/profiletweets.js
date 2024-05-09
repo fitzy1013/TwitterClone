@@ -9,6 +9,8 @@ const ProfileTweets = ({user, setCurrentPage, changeTweetPopState}) => {
     const [tweets, setTweets] = useState([])
     const [retweets , setRetweets] = useState([])
 
+    console.log(user)
+
     useEffect(() => {
         // Reset pageLoaded state
         setPageLoaded(false);

@@ -84,5 +84,19 @@ router.delete("/:id", async (req, res) => {
   res.status(200).json({ message: "Tweet and its replies deleted successfully" });
 });
 
+router.get("/user/:username", async (req, res) => {
+  const username = req.params.username;
+  try {
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const tweets = await Tweet.find({ username });
+    res.status(200).json(tweets);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 module.exports = router;
 
