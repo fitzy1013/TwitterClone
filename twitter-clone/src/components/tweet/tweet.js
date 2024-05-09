@@ -151,7 +151,7 @@ const Tweet = ({
     axios
       .get(`http://localhost:3002/api/users/${tweet.username}`)
       .then((response) => {
-        setUser(response.data);
+        setUser(response.data[0]);
       })
       .catch((error) => {
         console.error("Error fetching user:", error);

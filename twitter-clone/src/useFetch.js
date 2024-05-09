@@ -8,7 +8,7 @@ const useFetchUserInfo = (username) => {
     axios
       .get(`http://localhost:3002/api/users/${username}`)
       .then((response) => {
-        setUser(response.data);
+        setUser(response.data[0]);
       })
       .catch((error) => {
         console.error("Error:", error);

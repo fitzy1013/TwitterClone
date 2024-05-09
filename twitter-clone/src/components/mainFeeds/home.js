@@ -32,7 +32,7 @@ const Home = ({ username, setCurrentPage, changeTweetPopState }) => {
           axios
             .get(`http://localhost:3002/api/users/${username}`)
             .then((response) => {
-              setUser(response.data);
+              setUser(response.data[0]);
             });
           setPageLoaded(true);
         })
