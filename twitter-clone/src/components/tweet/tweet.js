@@ -161,6 +161,7 @@ const Tweet = ({
     setLiked(hasUserLiked(sessionStorage.getItem("usernane")))
     setUsername(sessionStorage.getItem("username"))
     setLikes(tweet.likes);
+    console.log(tweet)
     setLikeCount(tweet.likes.length);
     setRetweets(tweet.retweets);
     setRetweetCount(tweet.retweets.length);

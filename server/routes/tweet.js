@@ -26,6 +26,18 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/:id", async (req, res) => {
+  try {
+    const tweet = await Tweet.findById(req.params.id);
+    if (!tweet) {
+      return res.status(404).json({ message: "Tweet not found" });
+    }
+    res.status(200).json(tweet);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // post a tweet
 router.post("/", async (req, res) => {
   const tweet = new Tweet({

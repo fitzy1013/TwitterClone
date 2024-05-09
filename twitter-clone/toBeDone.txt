@@ -43,10 +43,3 @@ Replies Plan
 - Use a variation of TweetPop which has the original tweet displayed above and a line between the tweet and the reply 
 
 -For displaying the replies will create a seperate page where onClick of a tweet it will be isolated and there will host the replies
-
-
-Plan for today 
-- Refactoring the server side of the code to add likes replies and retweets to the origin tweet/reply so then the front end code can be fixed to get all the required info in 1 go
-- Steps to be done
-- Refactor the Post request for each to do an update to the tweet object
-- Also refactor the delete method for each to make these changes

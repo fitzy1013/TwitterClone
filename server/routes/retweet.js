@@ -68,7 +68,7 @@ router.post('/', async (req, res) => {
     }
     const retweet = new Retweet({
       username,
-      item: tweetID,
+      item: tweet,
       quote
     });
     await retweet.save();

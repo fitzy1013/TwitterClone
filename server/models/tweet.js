@@ -20,8 +20,13 @@ const tweetSchema = mongoose.Schema({
     },
     likes: [likesSchema],
     replies: [replySchema],
-    retweets: [retweetSchema] 
+    retweets: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Retweet'
+    }]
 });
+
+
 
 // Tweet Model
 module.exports = mongoose.model('Tweet', tweetSchema);

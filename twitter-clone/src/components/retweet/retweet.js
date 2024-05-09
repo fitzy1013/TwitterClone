@@ -17,6 +17,8 @@ const Retweet = ({ retweet }) => {
   const [hasQuote, setHasQuote] = useState(false);
   const retweetUser = useFetchUserInfo(retweet.username);
   const [isDeleted, setIsDeleted] = useState(false);
+  const [tweet, setTweet] = useState({})
+  const [pageLoaded, setPageLoaded] = useState(false);
 
   console.log(retweet);
 
@@ -39,7 +41,7 @@ const Retweet = ({ retweet }) => {
     } else {
       setHasQuote(true);
       console.log("Does Have Quote");
-    }
+    }    
   }, []);
 
   return (
@@ -93,7 +95,7 @@ const Retweet = ({ retweet }) => {
             )}
           </Box>
           <Tweet
-            tweet={retweet.tweet}
+            tweet={retweet.item}
             isEmbed={hasQuote ? true : false}
             retweet={retweet}
             // changeTweetPopState={changeTweetPopState}
