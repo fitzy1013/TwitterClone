@@ -28,12 +28,12 @@ const Tweet = ({
   const [retweets, setRetweets] = useState([]);
   const [replies, setReplies] = useState([]);
   const tweetId = retweet && isEmbed ? retweet._id : tweet._id;
-  const [isLiked, setIsLiked] = useState(false);
   const [isRetweeted, setIsRteweeted] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [retweetCount, setRetweetCount] = useState(0);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isDeleted, setIsDeleted] = useState(false);
+  const [liked, setLiked] = useState(false)
   const open = Boolean(anchorEl);
   const [username, setUsername] = useState(null);
 
@@ -69,7 +69,7 @@ const Tweet = ({
         itemId: tweetId
       };
   
-      if (hasUserLiked(username)) {
+      if (liked) {
         const response = await axios.delete(
           `http://localhost:3002/api/likes/${tweetId}/${username}`
         );
@@ -79,12 +79,13 @@ const Tweet = ({
         console.log(response);
       }
   
-      if (isLiked) {
+      if (liked) {
         setLikeCount(likeCount - 1);
+        setLiked(false)
       } else {
         setLikeCount(likeCount + 1);
+        setLiked(true);
       }
-      setIsLiked(!isLiked);
     } catch (err) {
       console.log(err.message);
     }
@@ -157,13 +158,13 @@ const Tweet = ({
         console.error("Error fetching user:", error);
       });
 
+    setLiked(hasUserLiked(sessionStorage.getItem("usernane")))
     setUsername(sessionStorage.getItem("username"))
     setLikes(tweet.likes);
     setLikeCount(tweet.likes.length);
     setRetweets(tweet.retweets);
     setRetweetCount(tweet.retweets.length);
     setPageLoaded(true);
-    setIsLiked(hasUserLiked(sessionStorage.getItem("username")));
     setIsRteweeted(hasUserRetweeted(sessionStorage.getItem("username")));
   }, [pageLoaded, tweet]);
 
@@ -216,7 +217,7 @@ const Tweet = ({
                     <ChatBubbleOutlineIcon />
                   </IconButton>
                   <Typography paddingLeft={1}>
-                    <strong>5</strong>
+                    <strong>{replies.length}</strong>
                   </Typography>
                 </Box>
                 <Box display="flex" flexDirection="row">
@@ -244,7 +245,7 @@ const Tweet = ({
                     onClick={handleLikeButtonClicked}
                     sx={{ bottom: "20%" }}
                   >
-                    {isLiked ? (
+                    {liked ? (
                       <FavoriteIcon sx={{ color: "red" }} />
                     ) : (
                       <FavoriteBorderOutlinedIcon />

@@ -91,27 +91,35 @@ router.post('/', async (req, res) => {
 
 // delete a like
 router.delete("/:id/:username", async (req, res) => {
-  const { id, username } = req.params;
-  console.log(id);
-  console.log(username);
-  try {
-    // Find and delete the like
-    const like = await Like.findOneAndDelete({ item: id, username });
-    if (!like) {
-      return res.status(400).json({ message: "Like under this ID doesn't exist" });
+    const { id, username } = req.params;
+    console.log(id);
+    console.log(username);
+    try {
+      // Find and delete the like
+      const like = await Like.findOneAndDelete({ item: id, username });
+      if (!like) {
+        return res.status(400).json({ message: "Like under this ID doesn't exist" });
+      }
+  
+      // Update likes in tweet or retweet schema
+      let item;
+      item = await Tweet.findById(id);
+      if (!item) {
+        item = await Retweet.findById(id);
+      }
+      if (item) {
+        // Remove the deleted like from the likes array
+        item.likes = item.likes.filter(likeObj => likeObj._id.toString() !== like._id.toString());
+        await item.save();
+        return res.status(200).json({ message: "Record Deleted Successfully" });
+      } else {
+        return res.status(400).json({ message: "Tweet or Retweet under this ID doesn't exist" });
+      }
+    } catch (err) {
+      res.status(500).json({ message: err.message });
     }
-
-    // Update likes in tweet or retweet schema
-    const item = await Tweet.findById(id) || await Retweet.findById(id);
-    if (item) {
-      await item.updateOne({ $pull: { likes: like._id } });
-    }
-
-    res.status(200).json({ message: "Record Deleted Successfully" });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
+  });
+  
 
 module.exports = router;
 
