@@ -4,7 +4,8 @@ const likesSchema = require('../schemas/likesSchema')
 
 const retweetSchema = mongoose.Schema({
     item: {
-        type: Object,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Tweet',
         required: true
     },
     username : {

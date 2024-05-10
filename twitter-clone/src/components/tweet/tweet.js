@@ -28,7 +28,7 @@ const Tweet = ({
   const [retweets, setRetweets] = useState([]);
   const [replies, setReplies] = useState([]);
   const tweetId = retweet && isEmbed ? retweet._id : tweet._id;
-  const [isRetweeted, setIsRteweeted] = useState(false);
+  const [isRetweeted, setIsRetweeted] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [retweetCount, setRetweetCount] = useState(0);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -43,17 +43,24 @@ const Tweet = ({
   console.log(likes);
   console.log(user);
   console.log(retweet);
+  console.log(isRetweeted);
 
   const hasUserLiked = (username) => {
     console.log(likes.some((like) => like.username === username));
     return likes.some((like) => like.username === username);
   };
 
-  const hasUserRetweeted = (username) => {
-    console.log(retweets);
-    console.log(retweets.some((retweet) => retweet.username === username));
-    return retweets.some((retweet) => retweet.username === username);
+  const hasUserRetweetedWithoutQuote = (username) => {
+    var found = false;
+    for (var i = 0; i < retweets.length && !found; i++) {
+      if (retweets[i].username = username && retweets[i].quote == null) {
+        found = true;
+      }
+    }
+
+    return found;
   };
+  
 
   const onProfileClick = () => {
     setCurrentPage("Profile");
@@ -108,7 +115,7 @@ const Tweet = ({
 
   const handleLRetweetButtonClicked = async () => {
     try {
-      if (hasUserRetweeted(sessionStorage.getItem("username"))) {
+      if (hasUserRetweetedWithoutQuote(username)) {
         const response = await axios.delete(
           `http://localhost:3002/api/retweets/${tweetId}/${sessionStorage.getItem(
             "username"
@@ -148,6 +155,17 @@ const Tweet = ({
     handleClose();
   };
 
+  const howManyRetweetsWithoutQuote = (retweets) => {
+    var count = 0;
+    for (var i = 0; i < retweets.length; i++) {
+      if (retweets[i].quote == null) {
+        count++;
+      }
+    }
+
+    return count;
+  }
+
   useEffect(() => {
     axios
       .get(`http://localhost:3002/api/users/${tweet.username}`)
@@ -164,10 +182,9 @@ const Tweet = ({
     console.log(tweet)
     setLikeCount(tweet.likes.length);
     setRetweets(tweet.retweets);
-    setRetweetCount(tweet.retweets.length);
+    setRetweetCount(howManyRetweetsWithoutQuote(retweets));
     setPageLoaded(true);
-    setIsRteweeted(hasUserRetweeted(sessionStorage.getItem("username")));
-  }, [pageLoaded, tweet]);
+  }, [pageLoaded]);
 
   return (
     <Box>
@@ -223,7 +240,7 @@ const Tweet = ({
                 </Box>
                 <Box display="flex" flexDirection="row">
                   <IconButton onClick={handleClick} sx={{ bottom: "20%" }}>
-                    {isRetweeted ? (
+                    {hasUserRetweetedWithoutQuote(username) ? (
                       <CachedOutlinedIcon sx={{ color: "green" }} />
                     ) : (
                       <CachedOutlinedIcon />

@@ -43,3 +43,6 @@ Replies Plan
 - Use a variation of TweetPop which has the original tweet displayed above and a line between the tweet and the reply 
 
 -For displaying the replies will create a seperate page where onClick of a tweet it will be isolated and there will host the replies
+
+To be done soon
+refine the logic for retweets to match how it is done on Twitter

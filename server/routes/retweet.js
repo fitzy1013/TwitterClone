@@ -68,7 +68,7 @@ router.post('/', async (req, res) => {
     }
     const retweet = new Retweet({
       username,
-      item: tweet,
+      item: tweet._id,
       quote
     });
     await retweet.save();
@@ -97,16 +97,26 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// delete a retweet by tweet ID and username
 router.delete("/:id/:username", async (req, res) => {
   try {
-    const retweet = await Retweet.findOne({ item: req.params.id, username: req.params.username });
+    const retweet = await Retweet.findOneAndDelete({ item: req.params.id, username: req.params.username, quote: { $exists: false } });
     if (!retweet) {
-      return res.status(400).json({ message: "Retweet under this ID doesn't exist" });
+      return res.status(400).json({ message: "Retweet under this ID and username doesn't exist or has a quote" });
     }
-    // Update retweet count in the tweet schema
-    await Tweet.updateOne({ _id: retweet.item }, { $pull: { retweets: retweet._id } });
-    await retweet.remove();
+
+    // Delete the retweet document
+    await Retweet.deleteOne({ _id: retweet._id });
+
+    // Update retweets array in the tweet schema
+    const tweetUpdate = await Tweet.updateOne(
+      { _id: retweet.item },
+      { $pull: { retweets: { username: req.params.username, quote: null } } }
+    );
+
+    if (tweetUpdate.nModified === 0) {
+      return res.status(400).json({ message: "Retweet was not properly removed from the tweet object" });
+    }
+    
     res.status(200).json({ message: "Record Deleted Successfully" });
   } catch (err) {
     res.status(500).json({ message: err.message });

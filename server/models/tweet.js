@@ -20,10 +20,7 @@ const tweetSchema = mongoose.Schema({
     },
     likes: [likesSchema],
     replies: [replySchema],
-    retweets: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Retweet'
-    }]
+    retweets: [retweetSchema]
 });
 
 
