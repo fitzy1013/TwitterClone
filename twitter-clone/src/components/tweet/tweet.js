@@ -117,9 +117,12 @@ const Tweet = ({
     try {
       if (hasUserRetweetedWithoutQuote(username)) {
         const response = await axios.delete(
-          `http://localhost:3002/api/retweets/${tweetId}/${sessionStorage.getItem(
-            "username"
-          )}`
+          `http://localhost:3002/api/retweets/${tweetId}`,
+          {
+            params: {
+              username: sessionStorage.getItem("username")
+            }
+          }
         );
         console.log(response.data);
       } else {
@@ -211,13 +214,13 @@ const Tweet = ({
           <Box sx={{ width: "100%", display: "flex", flexDirection: "column" }}>
             <Typography variant="body1">
               <strong>{user.displayName}</strong> @{tweet.username}
-              <Box sx={{ float: "right" }}>
+              {!isEmbed && <Box sx={{ float: "right" }}>
                 <OptionTweets
                   handleDeleteTweet={handleDeleteTweet}
                   username={username}
                   tweetUser={tweet.username}
                 />
-              </Box>
+              </Box>}
             </Typography>
             <Typography paddingTop={1} variant="body1">
               {tweet.content}

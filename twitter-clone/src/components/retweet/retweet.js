@@ -21,11 +21,17 @@ const Retweet = ({ retweet }) => {
   const [pageLoaded, setPageLoaded] = useState(false);
 
   console.log(retweet);
+  console.log(retweet.item)
 
   const handleDeleteTweet = async () => {
     try {
       const response = axios.delete(
-        `http://localhost:3002/api/retweets/quote/${retweet._id}`
+        `http://localhost:3002/api/retweets/quote/${retweet._id}`,
+        {
+          params:{
+          username: retweet.username,
+          quote: retweet.quote
+        }}
       );
       console.log(response);
       setIsDeleted(true);
