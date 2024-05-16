@@ -91,9 +91,6 @@ const Retweet = ({ retweet }) => {
                       : retweet.username}{" "}
                     retweeted this
                   </Typography>
-                  <Box sx={{ marginLeft: "auto" }}>
-                    <OptionTweets handleDeleteTweet={handleDeleteTweet} />
-                  </Box>
                 </Box>
               )}
               {hasQuote && (

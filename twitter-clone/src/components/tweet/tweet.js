@@ -201,6 +201,7 @@ const Tweet = ({
         <Box
           marginTop={1}
           paddingBottom={2}
+          paddingTop={2}
           paddingLeft={isEmbed ? 5 : 0}
           paddingRight={5}
           sx={{
@@ -235,7 +236,7 @@ const Tweet = ({
                   {user.username} {/* Render user.username */}
                 </>
               )}
-              {!isEmbed && (
+              {!isEmbed && username == tweet.username && (
                 <Box sx={{ float: "right" }}>
                   <OptionTweets
                     handleDeleteTweet={handleDeleteTweet}
