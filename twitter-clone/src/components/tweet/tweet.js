@@ -33,7 +33,7 @@ const Tweet = ({
   const [retweetCount, setRetweetCount] = useState(0);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isDeleted, setIsDeleted] = useState(false);
-  const [liked, setLiked] = useState(false)
+  const [liked, setLiked] = useState(false);
   const open = Boolean(anchorEl);
   const [username, setUsername] = useState(null);
 
@@ -53,14 +53,13 @@ const Tweet = ({
   const hasUserRetweetedWithoutQuote = (username) => {
     var found = false;
     for (var i = 0; i < retweets.length && !found; i++) {
-      if (retweets[i].username = username && retweets[i].quote == null) {
+      if ((retweets[i].username = username && retweets[i].quote == null)) {
         found = true;
       }
     }
 
     return found;
   };
-  
 
   const onProfileClick = () => {
     setCurrentPage("Profile");
@@ -73,22 +72,25 @@ const Tweet = ({
       const username = sessionStorage.getItem("username");
       const body = {
         username,
-        itemId: tweetId
+        itemId: tweetId,
       };
-  
+
       if (liked) {
         const response = await axios.delete(
           `http://localhost:3002/api/likes/${tweetId}/${username}`
         );
         console.log(response.data);
       } else {
-        const response = await axios.post("http://localhost:3002/api/likes", body);
+        const response = await axios.post(
+          "http://localhost:3002/api/likes",
+          body
+        );
         console.log(response);
       }
-  
+
       if (liked) {
         setLikeCount(likeCount - 1);
-        setLiked(false)
+        setLiked(false);
       } else {
         setLikeCount(likeCount + 1);
         setLiked(true);
@@ -97,7 +99,6 @@ const Tweet = ({
       console.log(err.message);
     }
   };
-  
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -120,8 +121,8 @@ const Tweet = ({
           `http://localhost:3002/api/retweets/${tweetId}`,
           {
             params: {
-              username: sessionStorage.getItem("username")
-            }
+              username: sessionStorage.getItem("username"),
+            },
           }
         );
         console.log(response.data);
@@ -167,31 +168,31 @@ const Tweet = ({
     }
 
     return count;
-  }
+  };
 
   useEffect(() => {
     if (tweet) {
-    axios
-      .get(`http://localhost:3002/api/users/${tweet.username}`)
-      .then((response) => {
-        setUser(response.data[0]);
-      })
-      .catch((error) => {
-        console.error("Error fetching user:", error);
-      });
+      axios
+        .get(`http://localhost:3002/api/users/${tweet.username}`)
+        .then((response) => {
+          setUser(response.data[0]);
+        })
+        .catch((error) => {
+          console.error("Error fetching user:", error);
+        });
 
-    setLiked(hasUserLiked(sessionStorage.getItem("usernane")))
-    setUsername(sessionStorage.getItem("username"))
-    setLikes(tweet.likes);
-    console.log(tweet)
-    setLikeCount(tweet.likes.length);
-    setRetweets(tweet.retweets);
-    setRetweetCount(howManyRetweetsWithoutQuote(retweets));
-    setPageLoaded(true);
-  } else {
-    console.log("no tweet is present")
-    setPageLoaded(true)
-  }
+      setLiked(hasUserLiked(sessionStorage.getItem("usernane")));
+      setUsername(sessionStorage.getItem("username"));
+      setLikes(tweet.likes);
+      console.log(tweet);
+      setLikeCount(tweet.likes.length);
+      setRetweets(tweet.retweets);
+      setRetweetCount(howManyRetweetsWithoutQuote(retweets));
+      setPageLoaded(true);
+    } else {
+      console.log("no tweet is present");
+      setPageLoaded(true);
+    }
   }, [pageLoaded]);
 
   return (
@@ -200,7 +201,7 @@ const Tweet = ({
         <Box
           marginTop={1}
           paddingBottom={2}
-          paddingLeft={isEmbed ? 5 :0}
+          paddingLeft={isEmbed ? 5 : 0}
           paddingRight={5}
           sx={{
             display: "flex",
@@ -212,21 +213,28 @@ const Tweet = ({
             transition: "background-color 0.3s ease", // Smooth transition for background color change
             "&:hover": {
               backgroundColor: "#f5f5f5", // Grayish background on hover
-            }
+            },
           }}
         >
           {tweet && (
             <IconButton onClick={onProfileClick}>
               <Avatar
                 alt="GOAT"
-                sx={{ border: "0.5px solid black" }}
+                sx={{ border: "0.5px solid black", marginBottom: "50px" }} // Adjust marginTop for avatar position
                 src={user.displayImageUrl}
               />
             </IconButton>
           )}
           <Box sx={{ width: "100%", display: "flex", flexDirection: "column" }}>
             <Typography variant="body1">
-              <strong>{user.displayName}</strong> 
+              <strong>{user.displayName}</strong>
+              {tweet && (
+                <>
+                  {" "}
+                  @
+                  {user.username} {/* Render user.username */}
+                </>
+              )}
               {!isEmbed && (
                 <Box sx={{ float: "right" }}>
                   <OptionTweets
@@ -242,7 +250,11 @@ const Tweet = ({
                 {tweet.content}
               </Typography>
             ) : (
-              <Typography paddingTop={1} variant="body1" sx={{textAlign: "center"}}>
+              <Typography
+                paddingTop={1}
+                variant="body1"
+                sx={{ textAlign: "center" }}
+              >
                 Original tweet has been deleted
               </Typography>
             )}
@@ -303,7 +315,7 @@ const Tweet = ({
         </Box>
       )}
     </Box>
-  );
+  ); 
 };
 
 export default Tweet;

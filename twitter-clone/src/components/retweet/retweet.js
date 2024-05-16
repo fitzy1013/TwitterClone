@@ -17,21 +17,22 @@ const Retweet = ({ retweet }) => {
   const [hasQuote, setHasQuote] = useState(false);
   const retweetUser = useFetchUserInfo(retweet.username);
   const [isDeleted, setIsDeleted] = useState(false);
-  const [tweet, setTweet] = useState({})
+  const [tweet, setTweet] = useState({});
   const [pageLoaded, setPageLoaded] = useState(false);
 
   console.log(retweet);
-  console.log(retweet.item)
+  console.log(retweet.item);
 
   const handleDeleteTweet = async () => {
     try {
       const response = axios.delete(
         `http://localhost:3002/api/retweets/quote/${retweet._id}`,
         {
-          params:{
-          username: retweet.username,
-          quote: retweet.quote
-        }}
+          params: {
+            username: retweet.username,
+            quote: retweet.quote,
+          },
+        }
       );
       console.log(response);
       setIsDeleted(true);
@@ -47,12 +48,19 @@ const Retweet = ({ retweet }) => {
     } else {
       setHasQuote(true);
       console.log("Does Have Quote");
-    }    
+    }
   }, []);
 
   return (
-    <Box>
-      {(retweetUser && !isDeleted) && (
+    <Box
+      sx={{
+        transition: "background-color 0.3s ease",
+        "&:hover": {
+          backgroundColor: "#f5f5f5",
+        },
+      }}
+    >
+      {retweetUser && !isDeleted && (
         <Box>
           <Box
             marginTop={2}
@@ -61,48 +69,54 @@ const Retweet = ({ retweet }) => {
               display: "flex",
               flexDirection: "row",
               gap: 2,
-              transition: "background-color 0.3s ease", // Smooth transition for background color change
-              "&:hover": {
-                backgroundColor: "#f5f5f5", // Grayish background on hover
-              }
+              alignItems: "flex-start",
             }}
           >
-            {!hasQuote && (
-              <Box width={"100%"}>
-                <CachedOutlinedIcon sx={{ paddingLeft: 2, paddingRight: 2 }} />
-                <Typography variant="body3" sx={{ verticalAlign: 5 }}>
-                  {retweet.username == sessionStorage.getItem("username")
-                    ? "You"
-                    : retweet.username}{" "}
-                  retweeted this
-                </Typography>
-              </Box>
-            )}
             {hasQuote && (
-              <Box width={"100%"}>
-                <CardHeader
-                  avatar={
-                    <Avatar
-                      alt="GOAT"
-                      sx={{ border: "0.5px solid black" }}
-                      src={retweetUser.displayImageUrl}
-                    />
-                  }
-                  title={
-                    <span>
-                      <strong>{retweetUser.displayName}</strong> @
-                      {retweetUser.username}{" "}
-                      <Box sx={{ float: "right" }}>
-                        <OptionTweets handleDeleteTweet={handleDeleteTweet}/>
-                      </Box>
-                    </span>
-                  }
-                />
-                <Typography variant="body1" sx={{ paddingLeft: 10 }}>
-                  {retweet.quote}
-                </Typography>{" "}
-              </Box>
+              <Avatar
+                alt="GOAT"
+                sx={{ border: "0.5px solid black", marginTop: "25px" }}
+                src={retweetUser.displayImageUrl}
+              />
             )}
+            <Box
+              sx={{ width: "100%", display: "flex", flexDirection: "column" }}
+            >
+              {!hasQuote && (
+                <Box width={"100%"} sx={{ display: "flex", alignItems: "center" }}>
+                  <CachedOutlinedIcon sx={{ paddingLeft: 2, paddingRight: 2 }} />
+                  <Typography variant="body2" sx={{ verticalAlign: "top", marginLeft: "8px" }}>
+                    {retweet.username === sessionStorage.getItem("username")
+                      ? "You"
+                      : retweet.username}{" "}
+                    retweeted this
+                  </Typography>
+                  <Box sx={{ marginLeft: "auto" }}>
+                    <OptionTweets handleDeleteTweet={handleDeleteTweet} />
+                  </Box>
+                </Box>
+              )}
+              {hasQuote && (
+                <Box width={"100%"}>
+                  <CardHeader
+                    title={
+                      <span style={{ display: "flex", alignItems: "center" }}>
+                        <Typography variant="body1">
+                          <strong>{retweetUser.displayName}</strong> @
+                          {retweetUser.username}
+                        </Typography>{" "}
+                        <Box sx={{ marginLeft: "auto" }}>
+                          <OptionTweets handleDeleteTweet={handleDeleteTweet} />
+                        </Box>
+                      </span>
+                    }
+                  />
+                  <Typography variant="body1" sx={{ paddingLeft: 2 }}>
+                    {retweet.quote}
+                  </Typography>{" "}
+                </Box>
+              )}
+            </Box>
           </Box>
           <Tweet
             tweet={retweet.item}
