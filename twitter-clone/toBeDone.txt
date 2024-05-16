@@ -46,3 +46,6 @@ Replies Plan
 
 To be done soon
 refine the logic for retweets to match how it is done on Twitter
+
+Main Step to do now is to work on how the app reacts when encountered a deleted
+tweet in a quote tweet

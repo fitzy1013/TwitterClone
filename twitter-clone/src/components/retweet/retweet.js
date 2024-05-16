@@ -61,6 +61,10 @@ const Retweet = ({ retweet }) => {
               display: "flex",
               flexDirection: "row",
               gap: 2,
+              transition: "background-color 0.3s ease", // Smooth transition for background color change
+              "&:hover": {
+                backgroundColor: "#f5f5f5", // Grayish background on hover
+              }
             }}
           >
             {!hasQuote && (

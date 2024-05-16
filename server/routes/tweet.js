@@ -93,6 +93,13 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 
+  // handling retweet deletion only deleting ones without a quote
+  try {
+    await Retweet.deleteMany({item: searchId, quote: null});
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+
   res.status(200).json({ message: "Tweet and its replies deleted successfully" });
 });
 

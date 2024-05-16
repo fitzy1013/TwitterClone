@@ -170,6 +170,7 @@ const Tweet = ({
   }
 
   useEffect(() => {
+    if (tweet) {
     axios
       .get(`http://localhost:3002/api/users/${tweet.username}`)
       .then((response) => {
@@ -187,44 +188,64 @@ const Tweet = ({
     setRetweets(tweet.retweets);
     setRetweetCount(howManyRetweetsWithoutQuote(retweets));
     setPageLoaded(true);
+  } else {
+    console.log("no tweet is present")
+    setPageLoaded(true)
+  }
   }, [pageLoaded]);
 
   return (
     <Box>
       {pageLoaded && !isDeleted && (
         <Box
-          marginTop={2}
+          marginTop={1}
           paddingBottom={2}
-          paddingLeft={5}
+          paddingLeft={isEmbed ? 5 :0}
           paddingRight={5}
           sx={{
             display: "flex",
             flexDirection: "row",
             gap: 2,
             borderBottom: "2px solid grey",
+            borderRadius: isEmbed ? "10px" : "0px", // Rounded border for embed
+            border: isEmbed ? "1px solid #ccc" : "none", // Border style for embed
+            transition: "background-color 0.3s ease", // Smooth transition for background color change
+            "&:hover": {
+              backgroundColor: "#f5f5f5", // Grayish background on hover
+            }
           }}
         >
-          <IconButton onClick={onProfileClick}>
-            <Avatar
-              alt="GOAT"
-              sx={{ border: "0.5px solid black" }}
-              src={user.displayImageUrl}
-            />
-          </IconButton>
+          {tweet && (
+            <IconButton onClick={onProfileClick}>
+              <Avatar
+                alt="GOAT"
+                sx={{ border: "0.5px solid black" }}
+                src={user.displayImageUrl}
+              />
+            </IconButton>
+          )}
           <Box sx={{ width: "100%", display: "flex", flexDirection: "column" }}>
             <Typography variant="body1">
-              <strong>{user.displayName}</strong> @{tweet.username}
-              {!isEmbed && <Box sx={{ float: "right" }}>
-                <OptionTweets
-                  handleDeleteTweet={handleDeleteTweet}
-                  username={username}
-                  tweetUser={tweet.username}
-                />
-              </Box>}
+              <strong>{user.displayName}</strong> 
+              {!isEmbed && (
+                <Box sx={{ float: "right" }}>
+                  <OptionTweets
+                    handleDeleteTweet={handleDeleteTweet}
+                    username={username}
+                    tweetUser={tweet ? tweet.username : null}
+                  />
+                </Box>
+              )}
             </Typography>
-            <Typography paddingTop={1} variant="body1">
-              {tweet.content}
-            </Typography>
+            {tweet ? (
+              <Typography paddingTop={1} variant="body1">
+                {tweet.content}
+              </Typography>
+            ) : (
+              <Typography paddingTop={1} variant="body1" sx={{textAlign: "center"}}>
+                Original tweet has been deleted
+              </Typography>
+            )}
             {!isEmbed && (
               <Box
                 paddingTop={2}
