@@ -12,12 +12,14 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import CancelIcon from "@mui/icons-material/Cancel";
 import Tweet from "./tweet/tweet";
+import Retweet from "./retweet/retweet";
 
 const TweetSubmission = ({
   changeTweetPopState,
   isPop,
   embedTweet,
-  username
+  username,
+  isQuoteRetweet
 }) => {
   const [tweetContent, setTweetContent] = useState("");
   const [tweetError, setTweetError] = useState("");
@@ -126,7 +128,8 @@ const TweetSubmission = ({
               onChange={(e) => setTweetContent(e.target.value)}
               value={tweetContent}
             />
-            {embedTweet != null && <Tweet tweet={embedTweet} isEmbed={true} />}
+            {embedTweet != null && !isQuoteRetweet && <Tweet tweet={embedTweet} isEmbed={true} />}
+            {embedTweet != null && isQuoteRetweet && <Retweet retweet={embedTweet} isEmbed={true} />}
             <Button
               onClick={onSumbitTweet}
               variant="contained"

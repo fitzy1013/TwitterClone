@@ -2,7 +2,7 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import TweetSubmission from './tweetSubmission'; // Import your TweetSubmission component
 
-const TweetPop = ({ changeTweetPopState, embedTweet, username, isReply }) => {
+const TweetPop = ({ changeTweetPopState, embedTweet, username, isReply, isQuoteRetweet}) => {
   console.log(embedTweet);
 
   return (
@@ -21,7 +21,7 @@ const TweetPop = ({ changeTweetPopState, embedTweet, username, isReply }) => {
         overflow: 'hidden', // Hide any overflowing content
       }}
     >
-      <TweetSubmission changeTweetPopState={changeTweetPopState} isPop={true} embedTweet={embedTweet} username={username} isReply={isReply} />
+      <TweetSubmission changeTweetPopState={changeTweetPopState} isPop={true} embedTweet={embedTweet} username={username} isReply={isReply} isQuoteRetweet={isQuoteRetweet} />
     </Box>
   );
 };

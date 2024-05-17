@@ -1,31 +1,52 @@
-import {
-  CardHeader,
-  Avatar,
-  Box,
-  Container,
-  Typography,
-  Card,
-} from "@mui/material";
 import React, { useState, useEffect } from "react";
+import { CardHeader, Avatar, Box, Typography, IconButton } from "@mui/material";
 import CachedOutlinedIcon from "@mui/icons-material/CachedOutlined";
-import Tweet from "../tweet/tweet";
 import axios from "axios";
 import useFetchUserInfo from "../../useFetch";
 import OptionTweets from "../optionsTweet";
+import Tweet from "../tweet/tweet";
+import TweetActions from "../tweet/tweetActions"
 
-const Retweet = ({ retweet }) => {
+const Retweet = ({ retweet, isEmbed, changeTweetPopState}) => {
   const [hasQuote, setHasQuote] = useState(false);
   const retweetUser = useFetchUserInfo(retweet.username);
   const [isDeleted, setIsDeleted] = useState(false);
   const [tweet, setTweet] = useState({});
   const [pageLoaded, setPageLoaded] = useState(false);
+  const [likes, setLikes] = useState([]);
+  const [retweets, setRetweets] = useState([]);
+  const [replies, setReplies] = useState([]);
+  const [username, setUsername] = useState(null);
 
-  console.log(retweet);
-  console.log(retweet.item);
+  console.log(isEmbed)
+  console.log(retweet)
+  console.log(retweets)
+  console.log(likes)
+  console.log(replies)
+
+  useEffect(() => {
+    if (!retweet.quote || retweet.quote === "") {
+      setHasQuote(false);
+      console.log("Doesn't Have Quote");
+    } else {
+      setHasQuote(true);
+      console.log("Does Have Quote");
+    }
+
+    setUsername(sessionStorage.getItem("username"));
+
+    if (retweet) {
+      setTweet(retweet);
+      setLikes(retweet.likes);
+      setRetweets(retweet.retweets);
+      setReplies(retweet.replies);
+      setPageLoaded(true);
+    }
+  }, [retweet]);
 
   const handleDeleteTweet = async () => {
     try {
-      const response = axios.delete(
+      const response = await axios.delete(
         `http://localhost:3002/api/retweets/quote/${retweet._id}`,
         {
           params: {
@@ -40,16 +61,6 @@ const Retweet = ({ retweet }) => {
       console.log(err.message);
     }
   };
-
-  useEffect(() => {
-    if (!retweet.quote || retweet.quote == "") {
-      setHasQuote(false);
-      console.log("Doesn't Have Quote");
-    } else {
-      setHasQuote(true);
-      console.log("Does Have Quote");
-    }
-  }, []);
 
   return (
     <Box
@@ -117,10 +128,19 @@ const Retweet = ({ retweet }) => {
           </Box>
           <Tweet
             tweet={retweet.item}
-            isEmbed={hasQuote ? true : false}
+            isEmbed={hasQuote}
             retweet={retweet}
-            // changeTweetPopState={changeTweetPopState}
           />
+          {hasQuote && !isEmbed && (
+            <TweetActions
+              tweet={retweet}
+              replies={replies}
+              retweets={retweets}
+              likes={likes}
+              username={username}
+              changeTweetPopState={changeTweetPopState}
+            />
+          )}
         </Box>
       )}
     </Box>

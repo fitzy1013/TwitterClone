@@ -11,10 +11,10 @@ const Tweets = ({tweets, setCurrentPage, retweets, changeTweetPopState}) => {
   return (
     <Box>
       {tweets && tweets.map((item, index) => (
-        <Tweet key={index} tweet={item} setCurrentPage={setCurrentPage} changeTweetPopState={changeTweetPopState}/>
+        <Tweet key={index} tweet={item} setCurrentPage={setCurrentPage} changeTweetPopState={changeTweetPopState} isEmbed={false}/>
       ))}
       {retweets && retweets.map((item, index) => (
-        <Retweet key={index} retweet={item} changeTweetPopState={changeTweetPopState}/>
+        <Retweet key={index} retweet={item} changeTweetPopState={changeTweetPopState} isEmbed={false}/>
       ))}
     </Box>
   );
