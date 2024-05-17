@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, IconButton, Menu, MenuItem, Typography } from "@mui/material";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import CachedOutlinedIcon from "@mui/icons-material/CachedOutlined";
@@ -108,6 +108,10 @@ const TweetActions = ({
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  useEffect(() => {
+    setLiked(hasUserLiked(username))
+  }, [])
 
   return (
     <Box
