@@ -17,7 +17,6 @@ const Tweet = ({
   const [likes, setLikes] = useState([]);
   const [retweets, setRetweets] = useState([]);
   const [replies, setReplies] = useState([]);
-  const tweetId = retweet && isEmbed ? retweet._id : tweet._id;
   const [isDeleted, setIsDeleted] = useState(false);
   const [username, setUsername] = useState(null);
 
