@@ -1,5 +1,6 @@
 import { Container } from '@mui/material';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
 import Home from './mainFeeds/home';
 import Explore from './mainFeeds/explore';
 import Notifications from './mainFeeds/notifications';
@@ -7,23 +8,19 @@ import Profile from './mainFeeds/profile';
 import Messages from './mainFeeds/messages';
 import Bookmarks from './mainFeeds/bookmarks';
 
-const MainContainer = ({currentPage, username, setCurrentPage, changeTweetPopState}) => {
-    const [altUsername, setAltUsername] = useState(null)
-
-    const changeAltUsername = (alt) => {
-        setAltUsername(alt)
-    }
-
-    return (
-        <Container>
-            {(currentPage == "Home") && <Home username={username} setCurrentPage={setCurrentPage} changeTweetPopState={changeTweetPopState}/>}
-            {(currentPage == "Explore") && <Explore username={username}/>}
-            {(currentPage == "Notifications") && <Notifications username={username}/>}
-            {(currentPage == "Profile") && <Profile altUsername={altUsername} username={username} changeAltUsername={changeAltUsername} setCurrentPage={setCurrentPage} changeTweetPopState={changeTweetPopState}/>}
-            {(currentPage == "Messages") && <Messages username={username}/>}
-            {(currentPage == "Bookmarks") && <Bookmarks username={username}/>}
-        </Container>
-    )
-}
+const MainContainer = ({ username, changeTweetPopState }) => {
+  return (
+    <Container>
+      <Routes>
+        <Route path="/" element={<Home username={username} changeTweetPopState={changeTweetPopState} />} />
+        <Route path="/explore" element={<Explore username={username} />} />
+        <Route path="/notifications" element={<Notifications username={username} />} />
+        <Route path="/profile/:userID" element={<Profile username={username} changeTweetPopState={changeTweetPopState} />} />
+        <Route path="/messages" element={<Messages username={username} />} />
+        <Route path="/bookmarks" element={<Bookmarks username={username} />} />
+      </Routes>
+    </Container>
+  );
+};
 
 export default MainContainer;

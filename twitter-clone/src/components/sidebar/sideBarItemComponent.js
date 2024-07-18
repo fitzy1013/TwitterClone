@@ -1,41 +1,38 @@
-import React from "react";
-import HomeIcon from "@mui/icons-material/Home";
-import TagIcon from "@mui/icons-material/Tag";
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
-import BookmarksIcon from '@mui/icons-material/Bookmarks';
-import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import { Box, Button, Typography } from "@mui/material";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Box, Typography } from "@mui/material";
 
-const SideBarItemComponent = ({ name, setCurrentPage, username }) => {
-  
-  const onClickHandler = (name) => {
-    if (name == "Profile") {
-      sessionStorage.setItem("profilePage", username)
-    }
-    setCurrentPage(name)
-    window.location.reload();
+const SideBarItemComponent = ({ name, username }) => {
+  let path = '';
+
+  switch(name) {
+    case 'Home':
+      path = '/';
+      break;
+    case 'Explore':
+      path = '/explore';
+      break;
+    case 'Notifications':
+      path = '/notifications';
+      break;
+    case 'Messages':
+      path = '/messages';
+      break;
+    case 'Bookmarks':
+      path = '/bookmarks';
+      break;
+    case 'Profile':
+      path = `/profile/${username}`;
+      break;
+    default:
+      path = '/';
   }
 
   return (
-    <Box
-    sx={{
-      display: "flex",
-      alignItems: "center",
-      marginBottom: 2,
-    }}
-  >
-    <Button variant="text" color='inherit' onClick={() => onClickHandler(name)}>
-      {name == "Home" && <HomeIcon fontSize="large"/>}
-      {name == "Explore" && <TagIcon fontSize="large" />}
-      {name == "Notifications" && <NotificationsNoneIcon fontSize="large"/>}
-      {name == "Messages" && <MailOutlineIcon fontSize="large"/>}
-      {name == "Bookmarks" && <BookmarksIcon fontSize="large"/>}
-      {name == "Profile" && <PersonOutlineIcon fontSize="large"/>}
-      <Typography variant={"h6"} paddingLeft={5}>
-        {name}
-      </Typography>
-    </Button>
+    <Box sx={{ margin: 1 }}>
+      <Link to={path} style={{ textDecoration: 'none', color: 'inherit' }}>
+        <Typography variant="h6">{name}</Typography>
+      </Link>
     </Box>
   );
 };
