@@ -1,25 +1,20 @@
-import {
-  Avatar,
-  Box,
-  Container,
-  Typography,
-  TextField,
-  Button,
-  Alert,
-} from "@mui/material";
+import { Avatar, Box, Container, Typography, TextField, Button, Alert } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import Tweets from "../tweets";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import TweetSubmission from "../tweetSubmission";
 
-const Home = ({ username, setCurrentPage, changeTweetPopState }) => {
+
+const Home = ({ username, changeTweetPopState }) => {
   const [tweetContent, setTweetContent] = useState("");
   const [tweetError, setTweetError] = useState("");
   const [tweets, setTweets] = useState([]);
   const [pageLoaded, setPageLoaded] = useState(false);
   const [user, setUser] = useState({});
+  const navigate = useNavigate();
 
-  console.log(user)
+  console.log(user);
 
   pageLoaded && console.log(tweets);
 
@@ -45,7 +40,7 @@ const Home = ({ username, setCurrentPage, changeTweetPopState }) => {
   const onSumbitTweet = async (e) => {
     e.preventDefault();
     setTweetError(null);
-    if (tweetContent == "") {
+    if (tweetContent === "") {
       return setTweetError("Tweet is Empty");
     }
 
@@ -54,7 +49,7 @@ const Home = ({ username, setCurrentPage, changeTweetPopState }) => {
         username,
         content: tweetContent,
       });
-      if (response.status == 201) {
+      if (response.status === 201) {
         console.log("Tweet Succesfully Posted");
         setTweetContent("");
         window.location.reload();
@@ -116,7 +111,7 @@ const Home = ({ username, setCurrentPage, changeTweetPopState }) => {
           )}
         </Box>
       </Box>
-      <Tweets tweets={tweets} setCurrentPage={setCurrentPage} changeTweetPopState={changeTweetPopState}/>
+      <Tweets tweets={tweets} navigate={navigate} changeTweetPopState={changeTweetPopState} />
     </Box>
   );
 };

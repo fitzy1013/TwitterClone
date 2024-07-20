@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Avatar, Box, Typography, IconButton } from "@mui/material";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import OptionTweets from "../optionsTweet";
-import TweetActions from "./tweetActions"
+import TweetActions from "./tweetActions";
+
 
 const Tweet = ({
   tweet,
   filter,
-  setCurrentPage,
   isEmbed,
   retweet,
   changeTweetPopState,
@@ -20,15 +21,15 @@ const Tweet = ({
   const [isDeleted, setIsDeleted] = useState(false);
   const [username, setUsername] = useState(null);
 
+  const navigate = useNavigate();
+
   const onProfileClick = () => {
-    setCurrentPage("Profile");
-    sessionStorage.setItem("profilePage", user.username);
-    window.location.reload();
+    navigate(`/profile/${user.username}`);
   };
 
   const handleDeleteTweet = async () => {
     try {
-      const response = axios.delete(
+      const response = await axios.delete(
         `http://localhost:3002/api/tweets/${tweet._id}`
       );
       console.log(response);
@@ -140,3 +141,4 @@ const Tweet = ({
 };
 
 export default Tweet;
+
