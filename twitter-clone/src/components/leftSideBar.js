@@ -4,10 +4,13 @@ import TwitterIcon from "@mui/icons-material/Twitter";
 import SideBarItemComponent from "./sidebar/sideBarItemComponent";
 import { useSignOut } from 'react-auth-kit'
 import { useNavigate } from "react-router";
+import { useUsername } from "../context/UsernameContext"
 
-const LeftSidebar = ({ username, changeTweetPopState }) => {
+const LeftSidebar = ({ changeTweetPopState }) => {
   const signOut = useSignOut();
   const navigate = useNavigate();
+
+  const username = useUsername();
 
   return (
     <Container sx={{ marginTop: 2 }}>

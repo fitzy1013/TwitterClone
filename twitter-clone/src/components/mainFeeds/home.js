@@ -1,41 +1,38 @@
-import { Avatar, Box, Container, Typography, TextField, Button, Alert } from "@mui/material";
+import { Avatar, Box, Typography, TextField, Button, Alert } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import Tweets from "../tweets";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import TweetSubmission from "../tweetSubmission";
+import { useUsername } from "../../context/UsernameContext";
 
-
-const Home = ({ username, changeTweetPopState }) => {
+const Home = ({ changeTweetPopState }) => {
   const [tweetContent, setTweetContent] = useState("");
   const [tweetError, setTweetError] = useState("");
   const [tweets, setTweets] = useState([]);
   const [pageLoaded, setPageLoaded] = useState(false);
   const [user, setUser] = useState({});
   const navigate = useNavigate();
-
-  console.log(user);
-
-  pageLoaded && console.log(tweets);
+  
+  const username = useUsername();
 
   useEffect(() => {
-    if (!pageLoaded) {
-      axios
-        .get("http://localhost:3002/api/tweets")
-        .then((response) => {
-          setTweets(response.data);
-          axios
-            .get(`http://localhost:3002/api/users/${username}`)
-            .then((response) => {
-              setUser(response.data[0]);
-            });
+    if (!pageLoaded && username) {
+      const fetchTweets = async () => {
+        try {
+          const tweetsResponse = await axios.get("http://localhost:3002/api/tweets");
+          setTweets(tweetsResponse.data);
+          
+          const userResponse = await axios.get(`http://localhost:3002/api/users/${username}`);
+          setUser(userResponse.data[0]);
+          
           setPageLoaded(true);
-        })
-        .catch((error) => {
+        } catch (error) {
           console.error("Error:", error);
-        });
+        }
+      };
+      fetchTweets();
     }
-  }, [pageLoaded]);
+  }, [pageLoaded, username]);
 
   const onSumbitTweet = async (e) => {
     e.preventDefault();
@@ -50,7 +47,7 @@ const Home = ({ username, changeTweetPopState }) => {
         content: tweetContent,
       });
       if (response.status === 201) {
-        console.log("Tweet Succesfully Posted");
+        console.log("Tweet Successfully Posted");
         setTweetContent("");
         window.location.reload();
       }
@@ -82,11 +79,11 @@ const Home = ({ username, changeTweetPopState }) => {
         }}
       >
         <Avatar
-          alt="GOAT"
+          alt="User"
           sx={{ width: 40, height: 40, border: "0.5px solid black" }}
           src={user.displayImageUrl}
         />
-        <Box component="form" style={{ width: "100%" }}>
+        <Box component="form" style={{ width: "100%" }} onSubmit={onSumbitTweet}>
           <TextField
             style={{ textAlign: "left", width: "100%" }}
             placeholder="What's happening?"
@@ -98,7 +95,7 @@ const Home = ({ username, changeTweetPopState }) => {
             value={tweetContent}
           />
           <Button
-            onClick={onSumbitTweet}
+            type="submit"
             variant="contained"
             style={{ float: "right", borderRadius: 6, marginTop: 5 }}
           >

@@ -8,16 +8,16 @@ import Profile from './mainFeeds/profile';
 import Messages from './mainFeeds/messages';
 import Bookmarks from './mainFeeds/bookmarks';
 
-const MainContainer = ({ username, changeTweetPopState }) => {
+const MainContainer = ({ changeTweetPopState }) => {
   return (
     <Container>
       <Routes>
-        <Route path="/" element={<Home username={username} changeTweetPopState={changeTweetPopState} />} />
-        <Route path="/explore" element={<Explore username={username} />} />
-        <Route path="/notifications" element={<Notifications username={username} />} />
-        <Route path="/profile/:userID" element={<Profile username={username} changeTweetPopState={changeTweetPopState} />} />
-        <Route path="/messages" element={<Messages username={username} />} />
-        <Route path="/bookmarks" element={<Bookmarks username={username} />} />
+        <Route path="/" element={<Home changeTweetPopState={changeTweetPopState} />} />
+        <Route path="/explore" element={<Explore  />} />
+        <Route path="/notifications" element={<Notifications />} />
+        <Route path="/profile/:userID" element={<Profile changeTweetPopState={changeTweetPopState} />} />
+        <Route path="/messages" element={<Messages />} />
+        <Route path="/bookmarks" element={<Bookmarks />} />
       </Routes>
     </Container>
   );

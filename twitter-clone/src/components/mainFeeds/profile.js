@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Container, Typography } from "@mui/material";
+import { Avatar, Box, Button, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import ProfileLikes from "../profileSections/profilelikes";
@@ -6,10 +6,10 @@ import ProfileMedia from "../profileSections/profilemedia";
 import ProfileTweets from "../profileSections/profiletweets";
 import EditProfileComponent from "../profileSections/editProfileComponent";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { useUsername } from "../../context/UsernameContext";
 
 const Profile = ({
-  username,
   altUsername,
   changeAltUsername,
   changeTweetPopState,
@@ -22,26 +22,15 @@ const Profile = ({
   const [followStatus, setFollowStatus] = useState(false);
   const [followStats, setFollowStats] = useState(null);
 
-  let params = useParams();
-  let profileUser = params.userID;
+  const username = useUsername();
+  const { userID } = useParams();
+  const profileUser = userID;
 
   console.log("profile page loaded");
 
   console.log(followStats);
   console.log(username);
   console.log(user);
-
-  const isFollowing = () => {
-    console.log("function run");
-    axios
-      .get(`http://localhost:3002/api/follows/${username}/${profileUser}`)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  };
 
   const onFollowButtonClick = async () => {
     try {
@@ -50,41 +39,33 @@ const Profile = ({
         followed: profileUser,
       });
       console.log(response);
+      setFollowStatus(!followStatus);
     } catch (err) {
       console.log(err.message);
     }
-    window.location.reload();
   };
 
   useEffect(() => {
-    setPageLoaded(false);
-    axios
-      .get(`http://localhost:3002/api/users/${profileUser}`)
-      .then((response) => {
-        setUser(response.data[0]);
+    const fetchData = async () => {
+      try {
+        const userResponse = await axios.get(`http://localhost:3002/api/users/${profileUser}`);
+        setUser(userResponse.data[0]);
+
+        const followStatusResponse = await axios.get(`http://localhost:3002/api/follows/${username}/${profileUser}`);
+        setFollowStatus(followStatusResponse.data.followStatus);
+
+        const followStatsResponse = await axios.get(`http://localhost:3002/api/follows/${profileUser}`);
+        setFollowStats(followStatsResponse.data);
+
         setPageLoaded(true);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Error:", error);
-      });
-    axios
-      .get(`http://localhost:3002/api/follows/${username}/${profileUser}`)
-      .then((response) => {
-        console.log(response);
-        setFollowStatus(response.data.followStatus);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-    axios
-      .get(`http://localhost:3002/api/follows/${profileUser}`)
-      .then((response) => {
-        console.log(response);
-        setFollowStats(response.data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+      }
+    };
+
+    if (username && profileUser) {
+      fetchData();
+    }
   }, [username, profileUser]);
 
   const changeEditProfile = () => {
@@ -264,5 +245,3 @@ const Profile = ({
 };
 
 export default Profile;
-
-
