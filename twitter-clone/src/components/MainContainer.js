@@ -7,6 +7,7 @@ import Notifications from './mainFeeds/notifications';
 import Profile from './mainFeeds/profile';
 import Messages from './mainFeeds/messages';
 import Bookmarks from './mainFeeds/bookmarks';
+import SingleTweetView from './tweet/singleTweetView';
 
 const MainContainer = ({ changeTweetPopState }) => {
   return (
@@ -18,6 +19,7 @@ const MainContainer = ({ changeTweetPopState }) => {
         <Route path="/profile/:userID" element={<Profile changeTweetPopState={changeTweetPopState} />} />
         <Route path="/messages" element={<Messages />} />
         <Route path="/bookmarks" element={<Bookmarks />} />
+        <Route path="/tweet/:id" element={<SingleTweetView changeTweetPopState={changeTweetPopState}/>} />
       </Routes>
     </Container>
   );

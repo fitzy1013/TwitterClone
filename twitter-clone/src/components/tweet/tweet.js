@@ -5,14 +5,7 @@ import { useNavigate } from "react-router-dom";
 import OptionTweets from "../optionsTweet";
 import TweetActions from "./tweetActions";
 
-
-const Tweet = ({
-  tweet,
-  filter,
-  isEmbed,
-  retweet,
-  changeTweetPopState,
-}) => {
+const Tweet = ({ tweet, filter, isEmbed, retweet, changeTweetPopState }) => {
   const [pageLoaded, setPageLoaded] = useState(false);
   const [user, setUser] = useState({});
   const [likes, setLikes] = useState([]);
@@ -25,6 +18,10 @@ const Tweet = ({
 
   const onProfileClick = () => {
     navigate(`/profile/${user.username}`);
+  };
+
+  const onTweetClick = () => {
+    navigate(`/tweet/${tweet._id}`);
   };
 
   const handleDeleteTweet = async () => {
@@ -90,7 +87,9 @@ const Tweet = ({
               />
             </IconButton>
           )}
-          <Box sx={{ width: "100%", display: "flex", flexDirection: "column" }}>
+          <Box
+            sx={{ width: "100%", display: "flex", flexDirection: "column" }}
+          >
             <Typography variant="body1">
               <strong>{user.displayName}</strong>
               {tweet && (
@@ -111,7 +110,18 @@ const Tweet = ({
               )}
             </Typography>
             {tweet ? (
-              <Typography paddingTop={1} variant="body1">
+              <Typography
+                paddingTop={1}
+                variant="body1"
+                onClick={onTweetClick}
+                sx={{
+                  transition: "background-color 0.3s ease",
+                  "&:hover": {
+                    backgroundColor: "#e0f7fa",
+                    cursor: "pointer",
+                  },
+                }}
+              >
                 {tweet.content}
               </Typography>
             ) : (
@@ -141,4 +151,3 @@ const Tweet = ({
 };
 
 export default Tweet;
-
